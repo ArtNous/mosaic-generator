@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "mosaico",
+    "password": "secret",
+    "database": "mosaico",
+    "host": "db",
+    "dialect": "mysql"
+  }
+}

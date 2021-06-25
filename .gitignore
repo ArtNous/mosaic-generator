@@ -1,0 +1,4 @@
+**/*.jpg
+mysql/*
+**/.vscode
+**/.eslintrc.js
