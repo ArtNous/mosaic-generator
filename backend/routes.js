@@ -13,9 +13,15 @@ module.exports = app => {
             const matrixs = await db.Mosaic.findAll({
                 attributes: ['path', 'matrix']
             })
-            res.json({ thumbs: matrixs.map(matrix => ({path: `${process.env.HOST}:${process.env.PORT}/${matrix.path}`, matrix: matrix.matrix})) })
+            res.json({ thumbs: matrixs.map(matrix => ({ path: `${process.env.HOST}:${process.env.PORT}/${matrix.path}`, matrix: matrix.matrix })) })
         } catch (error) {
             console.log(error)
         }
+    })
+
+    app.get('/test', (req, res) => {
+        res.json({
+            msg: 'Funcionando perfecto'
+        })
     })
 }
