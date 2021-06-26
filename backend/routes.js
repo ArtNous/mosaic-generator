@@ -8,7 +8,7 @@ module.exports = app => {
         res.json({ msg: 'Tarea en proceso' })
     })
 
-    app.post('/test', async (req, res) => {
+    app.post('/grids', async (req, res) => {
         try {
             const matrixs = await db.Mosaic.findAll({
                 attributes: ['path', 'matrix']
