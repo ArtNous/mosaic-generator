@@ -65,7 +65,7 @@ async function processImage(path) {
     }
 }
 
-function generateMosaics(thumbnails, imagesDir) {
+function generateMosaics(thumbnails) {
     fs.access(imagesDir, fs.constants.F_OK, async function (err) {
         if (err) {
             console.log(err)
