@@ -5,6 +5,7 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 
 ENV PORT 8080
+ENV HOST http://localhost
 
 EXPOSE 8080
 
