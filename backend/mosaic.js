@@ -28,7 +28,7 @@ async function createMosaic(imagePath, thumbnails) {
                     height: CELL
                 }).toBuffer()
                 const { channels } = await sharp(extracted).stats()
-                const colorExtracted = new three.Vector3(channels[0].mean, channels[1].mean, channels[2].mean)
+                const colorExtracted = new Vector3(channels[0].mean, channels[1].mean, channels[2].mean)
                 thumbnails.forEach(function (thumb) {
                     distances.push(colorExtracted.distanceTo(thumb.rgb))
                 })
