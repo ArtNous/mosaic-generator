@@ -2,7 +2,7 @@ const generateThumbnails = require('./mosaic')
 const db = require('./models')
 
 module.exports = app => {
-    app.get('/', (req, res) => {
+    app.post('/', (req, res) => {
         const email = req.query.email
         generateThumbnails('./images')
         res.json({ msg: 'Tarea en proceso' })

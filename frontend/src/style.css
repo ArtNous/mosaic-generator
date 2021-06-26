@@ -12,4 +12,11 @@ canvas{
     height: 500px;
     border-radius: 25px;
     box-shadow: 10px 10px 10px grey;
+    display: none;
+}
+
+button {
+    padding: 10px;
+    border-radius: 1em;
+    margin: 0 10px;
 }
