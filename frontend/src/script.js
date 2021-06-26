@@ -167,7 +167,7 @@ function lerp(a, b, x) {
     return a + x * (b - a);
 }
 
-ax.post('test').then(response => {
+ax.post('grids').then(response => {
     resolucion = response.data.resolution ?? resolucion
     loadImages(response.data.thumbs)
 }).catch(error => console.info(error))
