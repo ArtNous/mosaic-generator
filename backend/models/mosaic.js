@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Mosaic.init({
     path: DataTypes.STRING,
-    matrix: DataTypes.JSON
+    matrix: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Mosaic',

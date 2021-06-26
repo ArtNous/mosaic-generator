@@ -5,15 +5,15 @@ const { Vector3 } = require('three')
 const db = require('./models')
 
 async function createMosaic(imagePath, thumbnails) {
-    // let buffer
-    /* let mosaic = await sharp({
+    let buffer
+    let mosaic = await sharp({
         create: {
             width: imageSize,
             height: imageSize,
             channels: 3,
             background: { r: 255, g: 0, b: 0 }
         }
-    }) */
+    })
     try {
         const image = await sharp(`${imagesDir}/${imagePath}`).resize(imageSize, imageSize).toBuffer()
         let matriz = []
@@ -21,7 +21,7 @@ async function createMosaic(imagePath, thumbnails) {
             let row = []
             for (let left = 0; left < imageSize; left += CELL) {
                 let distances = []
-                /* const extracted = await sharp(image).extract({
+                const extracted = await sharp(image).extract({
                     top,
                     left,
                     width: CELL,
@@ -32,19 +32,19 @@ async function createMosaic(imagePath, thumbnails) {
                 thumbnails.forEach(function (thumb) {
                     distances.push(colorExtracted.distanceTo(thumb.rgb))
                 })
-                const nearestColorIndex = distances.findIndex((distance, i, distances) => distance === Math.min(...distances)) */
-                // const nearestThumb = thumbnails[nearestColorIndex]
-                /* buffer = await mosaic
+                const nearestColorIndex = distances.findIndex((distance, i, distances) => distance === Math.min(...distances))
+                const nearestThumb = thumbnails[nearestColorIndex]
+                buffer = await mosaic
                     .composite([{ input: nearestThumb.thumbnail, top, left }])
                     .jpeg()
                     .toBuffer()
-                mosaic = sharp(buffer) */
+                mosaic = sharp(buffer)
                 row[left / CELL] = Math.floor(Math.random() * 43)
             }
             matriz[top / CELL] = row
         }
         // mosaic.toFile(path)
-        db.Mosaic.create({ path: imagePath, matrix: matriz })
+        db.Mosaic.create({ path: imagePath, matrix: JSON.stringify(matriz) })
     } catch (error) {
         console.log(error)
         process.exit(1)

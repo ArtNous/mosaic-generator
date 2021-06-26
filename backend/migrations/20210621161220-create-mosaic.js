@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       matrix: {
-        type: Sequelize.JSON
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
