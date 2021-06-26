@@ -168,6 +168,8 @@ function lerp(a, b, x) {
 }
 
 ax.post('grids').then(response => {
-    resolucion = response.data.resolution ?? resolucion
-    loadImages(response.data.thumbs)
+    if(Array.isArray(response.data.thumbs) && response.data.thumbs.length > 0) {
+        resolucion = response.data.resolution ?? resolucion
+        loadImages(response.data.thumbs)
+    }
 }).catch(error => console.info(error))
