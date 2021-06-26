@@ -2,6 +2,7 @@ const { merge } = require('webpack-merge')
 const commonConfiguration = require('./webpack.common.js')
 const ip = require('internal-ip')
 const portFinderSync = require('portfinder-sync')
+const webpack = require('webpack')
 
 const infoColor = (_message) =>
 {
@@ -34,6 +35,12 @@ module.exports = merge(
                 
                 console.log(`Project running at:\n  - ${infoColor(domain1)}\n  - ${infoColor(domain2)}`)
             }
-        }
+        },
+        plugins:
+        [
+            new webpack.DefinePlugin({
+                'SERVER': JSON.stringify('http://localhost:8080')
+            })            
+        ]
     }
 )

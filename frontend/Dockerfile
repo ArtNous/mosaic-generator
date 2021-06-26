@@ -13,6 +13,5 @@ COPY . .
 ENV PORT 3000
 
 EXPOSE 3000
-ENV SERVER_URL http://backend
 
 CMD ["npm", "run", "dev"]
