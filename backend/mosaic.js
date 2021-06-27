@@ -1,5 +1,5 @@
 const fs = require('fs')
-const { CELL, CELL_EXTRACT, emitter, imageSize, imagesDir, thumbsDir } = require('./config/mosaic')
+const { CELL, emitter, imageSize, imagesDir, thumbsDir } = require('./config/mosaic')
 const sharp = require('sharp')
 const { Vector3 } = require('three')
 const db = require('./models')
@@ -15,8 +15,8 @@ async function createMosaic(imagePath, thumbnails) {
                 const extracted = await sharp(image).extract({
                     top,
                     left,
-                    width: CELL_EXTRACT,
-                    height: CELL_EXTRACT
+                    width: CELL,
+                    height: CELL
                 }).toBuffer()
                 const { channels } = await sharp(extracted).stats()
                 const colorExtracted = new Vector3(channels[0].mean, channels[1].mean, channels[2].mean)

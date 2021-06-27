@@ -1,11 +1,18 @@
 const generateThumbnails = require('./mosaic')
 const db = require('./models')
+const fs = require('fs')
 
 module.exports = app => {
     app.post('/', (req, res) => {
         const email = req.query.email
-        generateThumbnails('./images')
-        res.json({ msg: 'Tarea en proceso' })
+        try {
+            fs.accessSync('./tmp')
+            res.json({ msg: 'Hay un proceso corriendo actualmente. Por favor espere que termine.' })
+        } catch (error) {
+            fs.writeFileSync('./tmp', 'Generando')
+            generateThumbnails('./images')
+            res.json({ msg: 'Tarea en proceso' })            
+        }
     })
 
     app.post('/grids', async (req, res) => {
