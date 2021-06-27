@@ -6,10 +6,41 @@
     <title>Mosaico</title>
 </head>
 <body>
+    <header>
+        Header
+    </header>
     <main>
-        <button id="btnGenerate">Generar Mosaicos</button>
-        <button id="btnLoad">Cargar Mosaico</button>
+        <section id="intro">
+            <a href="/settings.html">Panel</a>
+            <div>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga facere earum quas veritatis delectus doloribus ratione nulla. Hic facilis laborum quam odit provident assumenda cumque eveniet voluptatibus molestiae? Qui, veniam.</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat minus voluptatum sunt maxime enim! Adipisci rem, eaque tempore dolore deserunt eveniet fugiat ipsum odio, nulla a nesciunt asperiores deleniti magni.</p>
+            </div>
+        </section>
+        <section id="steps" class="grid">
+            <div class="flex">
+                <div class="number text-center"><small>Paso</small> <p class="text-center">1</p></div>
+                <p class="text-center">Selecciona la matriz que mas te guste</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div class="flex">
+                <div class="number text-center"><small>Paso</small> <p class="text-center">2</p></div>
+                <p class="text-center">Gira y agranda el mosaico para observar todos sus detalles</p>
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div class="flex">
+                <div class="number text-center"><small>Paso</small> <p class="text-center">3</p></div>
+                <p class="text-center">Haz scroll, luego haz click y observa como pasas a una nueva composición</p>
+            </div>
+        </section>
+        <section id="mosaic">
+            <h2 class="text-center">Mosaico Fractal Inverso</h2>
+            <canvas id="canvas">No se puede mostrar el canvas</canvas>
+        </section>
     </main>
-    <canvas id="canvas">No se puede mostrar el canvas</canvas>
 </body>
 </html>

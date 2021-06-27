@@ -3,6 +3,7 @@ const commonConfiguration = require('./webpack.common.js')
 const ip = require('internal-ip')
 const portFinderSync = require('portfinder-sync')
 const webpack = require('webpack')
+const path = require('path')
 
 const infoColor = (_message) =>
 {
@@ -23,8 +24,6 @@ module.exports = merge(
             https: false,
             useLocalIp: true,
             disableHostCheck: true,
-            overlay: true,
-            noInfo: true,
             after: function(app, server, compiler)
             {
                 const port = server.options.port

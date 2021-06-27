@@ -167,20 +167,33 @@ window.onload = () => {
         organizar()
     }
 
-    document.getElementById('btnGenerate').addEventListener('click', e => {
-        ax.post('/').then(response => {
-            alert(response.data.msg)
-        }).catch(error => alert('Hubo un error al generar el mosaico'))
-    })
+    if(document.getElementById('btnGenerate')) {
+        document.getElementById('btnGenerate').addEventListener('click', e => {
+            ax.post('/').then(response => {
+                alert(response.data.msg)
+            }).catch(error => alert('Hubo un error al generar el mosaico'))
+        })
+    }
     
-    document.getElementById('btnLoad').addEventListener('click', e => {
-        ax.post('grids').then(response => {
-            const canvas = document.getElementsByTagName('canvas')[0]
-            canvas.style.display = 'block'
-            if (Array.isArray(response.data.thumbs) && response.data.thumbs.length > 0) {
-                resolucion = response.data.resolution ?? resolucion
-                loadImages(response.data.thumbs)
-            }
-        }).catch(error => console.info(error))
-    })
+    if(document.getElementById('btnLoad')) {
+        document.getElementById('btnLoad').addEventListener('click', e => {
+            ax.post('grids').then(response => {
+                const canvas = document.getElementsByTagName('canvas')[0]
+                canvas.style.display = 'block'
+                if (Array.isArray(response.data.thumbs) && response.data.thumbs.length > 0) {
+                    resolucion = response.data.resolution ?? resolucion
+                    loadImages(response.data.thumbs)
+                }
+            }).catch(error => console.info(error))
+        })
+    }
+
+    ax.post('grids').then(response => {
+        const canvas = document.getElementsByTagName('canvas')[0]
+        canvas.style.display = 'block'
+        if (Array.isArray(response.data.thumbs) && response.data.thumbs.length > 0) {
+            resolucion = response.data.resolution ?? resolucion
+            loadImages(response.data.thumbs)
+        }
+    }).catch(error => console.info(error))
 }
