@@ -1,5 +1,5 @@
 const fs = require('fs')
-const { CELL, emitter, imageSize, imagesDir, thumbsDir } = require('./config/mosaic')
+const { CELL, CELL_EXTRACT, emitter, imageSize, imagesDir, thumbsDir } = require('./config/mosaic')
 const sharp = require('sharp')
 const { Vector3 } = require('three')
 const db = require('./models')
@@ -24,12 +24,12 @@ async function createMosaic(imagePath, thumbnails) {
                 const extracted = await sharp(image).extract({
                     top,
                     left,
-                    width: CELL,
-                    height: CELL
+                    width: CELL_EXTRACT,
+                    height: CELL_EXTRACT
                 }).toBuffer()
                 const { channels } = await sharp(extracted).stats()
                 const colorExtracted = new Vector3(channels[0].mean, channels[1].mean, channels[2].mean)
-                thumbnails.forEach(function (thumb) {
+                thumbnails.forEach((thumb) => {
                     distances.push(colorExtracted.distanceTo(thumb.rgb))
                 })
                 const nearestColorIndex = distances.findIndex((distance, i, distances) => distance === Math.min(...distances))
