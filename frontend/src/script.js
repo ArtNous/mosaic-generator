@@ -8,7 +8,7 @@ import {
 
 window.onload = () => {
     const loader = new TextureLoader();
-    let resolucion = 20
+    let resolucion = 100
     let scene, master
     let mouse = new Vector2()
     let initialCameraPosition = new Vector3(1, 1, 100)
