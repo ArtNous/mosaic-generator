@@ -7,9 +7,9 @@ emitter.addListener('mosaic-generated', () => {
 })
 
 module.exports = {
-    CELL_EXTRACT: 10,
-    CELL: 50,
-    imageSize: 1000,
+    CELL_EXTRACT: 50,
+    CELL: 100,
+    imageSize: 500,
     imagesDir: './images',
     thumbsDir: './thumbnails',
     emitter
