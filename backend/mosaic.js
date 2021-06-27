@@ -27,9 +27,9 @@ async function createMosaic(imagePath, thumbnails) {
                 row[left / CELL_EXTRACT] = nearestColorIndex
             }
             matriz[top / CELL_EXTRACT] = row
-            console.log('fila lista')
+            console.log('fila lista', imagePath)
         }
-        console.log('Matriz de imagen guardada')
+        console.log('Matriz de imagen guardada', imagePath)
         db.Mosaic.create({ path: imagePath, matrix: JSON.stringify(matriz) })
     } catch (error) {
         console.log(error)
