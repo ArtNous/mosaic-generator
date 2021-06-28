@@ -34,7 +34,7 @@ window.onload = () => {
         master = new Object3D()
         scene.add(master);
         textures.forEach(function(textura){
-            materiales.push(new MeshBasicMaterial({ map: textura})
+            materiales.push(new MeshBasicMaterial({ map: textura}))
         })
         for (let y = 0; y < resolucion; y++) {
             for (let x = 0; x < resolucion; x++) {
