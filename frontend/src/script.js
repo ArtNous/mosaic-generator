@@ -96,7 +96,7 @@ window.onload = () => {
         function organizar() {
             const timeline = gsap.timeline({defaults: { duration: 2, ease: 'sine.inOut' }})
             master.children.forEach(function(plano){
-                timeline.to(plano.scale, { x: 1, y: 1})
+                timeline.to(plano.scale, { x: 1, y: 1},0)
                 .to(plano.rotation, { x: 0, y: 0},0)
                 .to(plano.position, { x: -resolucion / 2 + plano.userData.x, y: resolucion / 2 - plano.userData.y},0)
             })
