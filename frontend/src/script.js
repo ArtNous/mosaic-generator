@@ -81,7 +81,7 @@ window.onload = () => {
                 {defaults: { duration: 2, ease: 'sine.inOut' },
                 onComplete() {
                     canvas.addEventListener('dblclick', seleccionar, false)
-                    setMaterial(textures, matrix)
+                    setMaterial(matrix)
                     organizar()
                 }
             })
