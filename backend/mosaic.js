@@ -10,6 +10,7 @@ async function createMosaic(imagePath, thumbnails) {
         let matriz = []
         for (let top = 0; top < IMAGE_SIZE; top += CELL_EXTRACT) {
             let row = []
+            console.time(`fila${top / CELL_EXTRACT}_${imagePath}`)
             for (let left = 0; left < IMAGE_SIZE; left += CELL_EXTRACT) {
                 let distances = []
                 const extracted = await sharp(image).extract({
@@ -18,16 +19,16 @@ async function createMosaic(imagePath, thumbnails) {
                     width: CELL_EXTRACT,
                     height: CELL_EXTRACT
                 }).toBuffer()
-                const { channels } = await sharp(extracted).stats()
-                const colorExtracted = new Vector3(channels[0].dominant, channels[1].dominant, channels[2].dominant)
+                const { dominant } = await sharp(extracted).stats()
+                const colorExtracted = new Vector3(dominant.r, dominant.g, dominant.b)
                 thumbnails.forEach((thumb) => {
                     distances.push(colorExtracted.distanceTo(thumb.rgb))
                 })
                 const nearestColorIndex = distances.findIndex((distance, i, distances) => distance === Math.min(...distances))
                 row[left / CELL_EXTRACT] = nearestColorIndex
             }
+            console.timeEnd(`fila${top / CELL_EXTRACT}_${imagePath}`)
             matriz[top / CELL_EXTRACT] = row
-            console.log('fila lista', imagePath)
         }
         console.log('Matriz de imagen guardada', imagePath)
         db.Mosaic.create({ path: imagePath, matrix: JSON.stringify(matriz) })
@@ -41,13 +42,13 @@ async function processImage(path) {
     try {
         const thumbnail = await sharp(`${imagesDir}/${path}`).resize(CELL, CELL).toBuffer()
         await sharp(thumbnail).toFile(`${thumbsDir}/${path}`)
-        const { channels } = await sharp(thumbnail).stats()
+        const { dominant } = await sharp(thumbnail).stats()
 
-        const rgb = new Vector3(channels[0].dominant, channels[1].dominant, channels[2].dominant)
+        const rgb = new Vector3(dominant.r, dominant.g, dominant.b)
         console.log('Thumbnail generado')
         return { thumbnail, rgb }
     } catch (error) {
-        throw new Error('Error redimensianando la imagen')
+        throw new Error('Error redimensionando la imagen')
     }
 }
 
