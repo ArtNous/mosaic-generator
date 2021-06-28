@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import ax from './axios'
 
 import {
-    Mesh, Scene, MeshBasicMaterial, PerspectiveCamera, PlaneGeometry, WebGLRenderer, TextureLoader, Vector2, Raycaster, BoxGeometry, Object3D, Vector3
+    Mesh, Scene, MeshBasicMaterial, PerspectiveCamera, PlaneGeometry, WebGLRenderer, TextureLoader, Vector2, Raycaster, BoxGeometry, Object3D, Vector3, Plane
 } from 'three';
 
 window.onload = () => {
@@ -46,14 +46,10 @@ window.onload = () => {
     }
 
     function setMaterial(textures, matrix) {
-        let i = 0
-        for (let y = 0; y < resolucion; y++) {
-            for (let x = 0; x < resolucion; x++) {
-                master.children[i].material.map = textures[matrix[x][y]]
-                master.children[i].material.needsUpdate = true
-                i++
-            }
-        }
+        master.children.forEach(function(plano){
+            plano.material.map = textures[matrix[plano.userData.x][plano.userData.y]]
+            plano.material.needsUpdate = true
+        })
     }
 
     function main(textures, thumbs) {
@@ -79,38 +75,30 @@ window.onload = () => {
         }
 
         function intercambiar() {
-            let i = 0
-            const timeline = gsap.timeline({
-                defaults: { duration: 2, ease: 'sine.inOut' },
+            const timeline = gsap.timeline(
+                {defaults: { duration: 2, ease: 'sine.inOut' },
                 onComplete() {
                     canvas.addEventListener('dblclick', seleccionar, false)
                     setMaterial(textures, matrix)
                     organizar()
                 }
             })
-            for (let x = 0; x < resolucion; x++) {
-                for (let y = 0; y < resolucion; y++) {
-                    timeline
-                        .to(master.children[i].scale, { x: 0, y: 0 }, 0)
-                        .to(master.children[i].rotation, { x: 2, y: 2 }, 0)
-                        .to(master.children[i].position, { x: "random(-100, 100)", y: "random(-100, 100)" }, 0)
-                    i++
-                }
-            }
+            master.children.forEach(function(plano){
+                timeline.to(plano.scale, { x: 0, y: 0 }, 0)
+                .to(plano.rotation, { x: 2, y: 2 }, 0)
+                .to(plano.position, { x: "random(-100, 100)", y: "random(-100, 100)" }, 0)
+            })            
             timeline.start()
-            organizar()
         }
 
         function organizar() {
-            let i = 0
-            for (let y = 0; y < resolucion; y++) {
-                for (let x = 0; x < resolucion; x++) {
-                    gsap.to(master.children[i].scale, { x: 1, y: 1, duration: 2, ease: 'sine.inOut' })
-                    gsap.to(master.children[i].rotation, { x: 0, y: 0, duration: 2, ease: 'sine.inOut' })
-                    gsap.to(master.children[i].position, { x: -resolucion / 2 + x, y: resolucion / 2 - y, duration: 2, ease: 'sine.inOut' })
-                    i++
-                }
-            }
+            const timeline = gsap.timeline({defaults: { duration: 2, ease: 'sine.inOut' }})
+            master.children.forEach(function(plano){
+                timeline.to(plano.scale, { x: 1, y: 1})
+                .to(plano.rotation, { x: 0, y: 0},0)
+                .to(plano.position, { x: -resolucion / 2 + plano.userData.x, y: resolucion / 2 - plano.userData.y},0)
+            })
+            timeline.start()
         }
 
         function seleccionar(event) {
@@ -135,7 +123,6 @@ window.onload = () => {
         }
 
         canvas.addEventListener('mousemove', mouseMoveHandler);
-
         canvas.addEventListener('dblclick', seleccionar, false)
 
         let clicked = false
