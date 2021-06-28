@@ -12,6 +12,7 @@ window.onload = () => {
     let scene, master
     let mouse = new Vector2()
     let initialCameraPosition = new Vector3(1, 1, 100)
+    const materiales = []
 
     function loadTexture(img, index) {
         return new Promise(resolve => loader.load(img.path, texture => resolve(texture)))
@@ -26,16 +27,18 @@ window.onload = () => {
     function lerp(a, b, x) {
         return a + x * (b - a);
     }
-
+    
     function createPlanes(textures, matrix) {
         const tam_celda = 1
         const geometry = new PlaneGeometry(tam_celda, tam_celda);
         master = new Object3D()
         scene.add(master);
+        textures.forEach(function(textura){
+            materiales.push(new MeshBasicMaterial({ map: textura})
+        })
         for (let y = 0; y < resolucion; y++) {
             for (let x = 0; x < resolucion; x++) {
-                const material = new MeshBasicMaterial({ map: textures[matrix[x][y]] });
-                const mesh = new Mesh(geometry, material);
+                const mesh = new Mesh(geometry, materiales[matrix[x][y]]);
                 mesh.userData = { x, y }
                 const rand = Math.floor(Math.random() * resolucion) - resolucion / 2
                 mesh.position.set(rand, rand, 0)
@@ -45,10 +48,9 @@ window.onload = () => {
         }
     }
 
-    function setMaterial(textures, matrix) {
+    function setMaterial(matrix) {
         master.children.forEach(function(plano){
-            plano.material.map = textures[matrix[plano.userData.x][plano.userData.y]]
-            plano.material.needsUpdate = true
+            plano.material = materiales[matrix[plano.userData.x][plano.userData.y]]
         })
     }
 
@@ -64,7 +66,7 @@ window.onload = () => {
         camera.position.set(initialCameraPosition.x, initialCameraPosition.y, initialCameraPosition.z)
         let matrix = thumbs[0].matrix
         createPlanes(textures, matrix)
-        setMaterial(textures, matrix)
+        setMaterial(matrix)
 
         function render() {
             requestAnimationFrame(render);
