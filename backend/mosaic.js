@@ -1,16 +1,16 @@
 const fs = require('fs')
-const { CELL, CELL_EXTRACT, emitter, imageSize, imagesDir, thumbsDir } = require('./config/mosaic')
+const { CELL, CELL_EXTRACT, emitter, IMAGE_SIZE, imagesDir, thumbsDir } = require('./config/mosaic')
 const sharp = require('sharp')
 const { Vector3 } = require('three')
 const db = require('./models')
 
 async function createMosaic(imagePath, thumbnails) {
     try {
-        const image = await sharp(`${imagesDir}/${imagePath}`).resize(imageSize, imageSize).toBuffer()
+        const image = await sharp(`${imagesDir}/${imagePath}`).resize(IMAGE_SIZE, IMAGE_SIZE).toBuffer()
         let matriz = []
-        for (let top = 0; top < imageSize; top += CELL_EXTRACT) {
+        for (let top = 0; top < IMAGE_SIZE; top += CELL_EXTRACT) {
             let row = []
-            for (let left = 0; left < imageSize; left += CELL_EXTRACT) {
+            for (let left = 0; left < IMAGE_SIZE; left += CELL_EXTRACT) {
                 let distances = []
                 const extracted = await sharp(image).extract({
                     top,
@@ -19,7 +19,7 @@ async function createMosaic(imagePath, thumbnails) {
                     height: CELL_EXTRACT
                 }).toBuffer()
                 const { channels } = await sharp(extracted).stats()
-                const colorExtracted = new Vector3(channels[0].mean, channels[1].mean, channels[2].mean)
+                const colorExtracted = new Vector3(channels[0].dominant, channels[1].dominant, channels[2].dominant)
                 thumbnails.forEach((thumb) => {
                     distances.push(colorExtracted.distanceTo(thumb.rgb))
                 })
@@ -43,11 +43,11 @@ async function processImage(path) {
         await sharp(thumbnail).toFile(`${thumbsDir}/${path}`)
         const { channels } = await sharp(thumbnail).stats()
 
-        const rgb = new Vector3(channels[0].mean, channels[1].mean, channels[2].mean)
+        const rgb = new Vector3(channels[0].dominant, channels[1].dominant, channels[2].dominant)
         console.log('Thumbnail generado')
         return { thumbnail, rgb }
     } catch (error) {
-        throw new Error('Error aumentando la imagen')
+        throw new Error('Error redimensianando la imagen')
     }
 }
 

@@ -32,8 +32,8 @@ window.onload = () => {
         const geometry = new PlaneGeometry(tam_celda, tam_celda);
         master = new Object3D()
         scene.add(master);
-        for (let x = 0; x < resolucion; x++) {
-            for (let y = 0; y < resolucion; y++) {
+        for (let y = 0; y < resolucion; y++) {
+            for (let x = 0; x < resolucion; x++) {
                 const material = new MeshBasicMaterial({ map: textures[matrix[x][y]] });
                 const mesh = new Mesh(geometry, material);
                 mesh.userData = { x, y }
@@ -47,8 +47,8 @@ window.onload = () => {
 
     function setMaterial(textures, matrix) {
         let i = 0
-        for (let x = 0; x < resolucion; x++) {
-            for (let y = 0; y < resolucion; y++) {
+        for (let y = 0; y < resolucion; y++) {
+            for (let x = 0; x < resolucion; x++) {
                 master.children[i].material.map = textures[matrix[x][y]]
                 master.children[i].material.needsUpdate = true
                 i++
@@ -103,8 +103,8 @@ window.onload = () => {
 
         function organizar() {
             let i = 0
-            for (let x = 0; x < resolucion; x++) {
-                for (let y = 0; y < resolucion; y++) {
+            for (let y = 0; y < resolucion; y++) {
+                for (let x = 0; x < resolucion; x++) {
                     gsap.to(master.children[i].scale, { x: 1, y: 1, duration: 2, ease: 'sine.inOut' })
                     gsap.to(master.children[i].rotation, { x: 0, y: 0, duration: 2, ease: 'sine.inOut' })
                     gsap.to(master.children[i].position, { x: -resolucion / 2 + x, y: resolucion / 2 - y, duration: 2, ease: 'sine.inOut' })
