@@ -98,7 +98,7 @@ window.onload = () => {
             master.children.forEach(function(plano){
                 timeline.to(plano.scale, { x: 1, y: 1},0)
                 .to(plano.rotation, { x: 0, y: 0},0)
-                .to(plano.position, { x: resolucion / 2 - plano.userData.x, y: -resolucion / 2 + plano.userData.y},0)
+                .to(plano.position, { x: resolucion / 2 - plano.userData.y, y: resolucion / 2 - plano.userData.x},0)
             })
             // timeline.play()
         }
