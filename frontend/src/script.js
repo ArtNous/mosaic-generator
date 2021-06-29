@@ -71,8 +71,8 @@ window.onload = () => {
         function render() {
             requestAnimationFrame(render);
             renderer.render(scene, camera);
-            const tiltX = lerp(master.rotation.x, -mouse.y * 0.2, 0.1);
-            const tiltY = lerp(master.rotation.y, mouse.x * 0.2, 0.1);
+            const tiltX = lerp(master.rotation.x, -mouse.y * 0.3, 0.1);
+            const tiltY = lerp(master.rotation.y, mouse.x * 0.3, 0.1);
             master.rotation.set(tiltX, tiltY, 0);
         }
 
@@ -98,7 +98,7 @@ window.onload = () => {
             master.children.forEach(function(plano){
                 timeline.to(plano.scale, { x: 1, y: 1},0)
                 .to(plano.rotation, { x: 0, y: 0},0)
-                .to(plano.position, { x: -resolucion / 2 + plano.userData.x, y: resolucion / 2 - plano.userData.y},0)
+                .to(plano.position, { x: resolucion / 2 - plano.userData.y, y: -resolucion / 2 + plano.userData.x},0)
             })
             // timeline.play()
         }
