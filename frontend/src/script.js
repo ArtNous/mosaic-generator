@@ -90,7 +90,7 @@ window.onload = () => {
                 .to(plano.rotation, { x: 2, y: 2 }, 0)
                 .to(plano.position, { x: "random(-100, 100)", y: "random(-100, 100)" }, 0)
             })            
-            timeline.play()
+            // timeline.play()
         }
 
         function organizar() {
@@ -100,7 +100,7 @@ window.onload = () => {
                 .to(plano.rotation, { x: 0, y: 0},0)
                 .to(plano.position, { x: -resolucion / 2 + plano.userData.x, y: resolucion / 2 - plano.userData.y},0)
             })
-            timeline.play()
+            // timeline.play()
         }
 
         function seleccionar(event) {
