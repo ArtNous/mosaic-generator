@@ -39,7 +39,7 @@ window.onload = () => {
         for (let y = 0; y < resolucion; y++) {
             for (let x = 0; x < resolucion; x++) {
                 const mesh = new Mesh(geometry, materiales[matrix[x][y]]);
-                mesh.userData = { x, y }
+                mesh.userData = { y, x }
                 const rand = Math.floor(Math.random() * resolucion) - resolucion / 2
                 mesh.position.set(rand, rand, 0)
                 mesh.rotation.set(2, 2, 0)
@@ -98,7 +98,7 @@ window.onload = () => {
             master.children.forEach(function(plano){
                 timeline.to(plano.scale, { x: 1, y: 1},0)
                 .to(plano.rotation, { x: 0, y: 0},0)
-                .to(plano.position, { x: -resolucion / 2 + plano.userData.x, y: resolucion / 2 - plano.userData.y},0)
+                .to(plano.position, { x: resolucion / 2 - plano.userData.x, y: -resolucion / 2 + plano.userData.y},0)
             })
             timeline.start()
         }
