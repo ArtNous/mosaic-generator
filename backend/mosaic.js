@@ -1,10 +1,28 @@
 const fs = require('fs')
-const { CELL, CELL_EXTRACT, emitter, IMAGE_SIZE, imagesDir, thumbsDir } = require('./config/mosaic')
+const {
+    CELL,
+    CELL_EXTRACT,
+    CAROUSEL_THUMBSIZE,
+    emitter,
+    IMAGE_SIZE,
+    imagesDir,
+    thumbsDir,
+    mosaicsDir
+} = require('./config/mosaic')
 const sharp = require('sharp')
 const { Vector3 } = require('three')
 const db = require('./models')
 
 async function createMosaic(imagePath, thumbnails) {
+    let buffer
+    let mosaic = await sharp({
+        create: {
+            width: IMAGE_SIZE,
+            height: IMAGE_SIZE,
+            channels: 3,
+            background: { r: 255, g: 255, b: 255 }
+        }
+    })
     try {
         const image = await sharp(`${imagesDir}/${imagePath}`).resize(IMAGE_SIZE, IMAGE_SIZE).toBuffer()
         let matriz = []
@@ -25,28 +43,40 @@ async function createMosaic(imagePath, thumbnails) {
                     distances.push(colorExtracted.distanceTo(thumb.rgb))
                 })
                 const nearestColorIndex = distances.findIndex((distance, i, distances) => distance === Math.min(...distances))
+                const nearestThumb = thumbnails[nearestColorIndex]
+                buffer = await mosaic
+                    .composite([{ input: nearestThumb.thumbnail, top, left }])
+                    .jpeg()
+                    .toBuffer()
+                mosaic = sharp(buffer)
                 row[left / CELL_EXTRACT] = nearestColorIndex
             }
             console.timeEnd(`fila${top / CELL_EXTRACT}_${imagePath}`)
             matriz[top / CELL_EXTRACT] = row
         }
         console.log('Matriz de imagen guardada', imagePath)
-        db.Mosaic.create({ path: imagePath, matrix: JSON.stringify(matriz) })
+        mosaic.toFile(`${mosaicsDir}/${imagePath}`).then(() => {
+            db.Mosaic.create({ path: imagePath, matrix: JSON.stringify(matriz) })
+        })
     } catch (error) {
         console.log(error)
         process.exit(1)
     }
 }
 
-async function processImage(path) {
+async function createThumbnail(path, thumbSize, process = true, save = false, verbose = false) {
     try {
-        const thumbnail = await sharp(`${imagesDir}/${path}`).resize(CELL, CELL).toBuffer()
-        await sharp(thumbnail).toFile(`${thumbsDir}/${path}`)
-        const { dominant } = await sharp(thumbnail).stats()
+        const thumbnail = await sharp(`${imagesDir}/${path}`).resize(thumbSize, thumbSize).toBuffer()
+        
+        if (save) await sharp(thumbnail).toFile(`${thumbsDir}/sz_${thumbSize}_${path}`)
 
-        const rgb = new Vector3(dominant.r, dominant.g, dominant.b)
-        console.log('Thumbnail generado')
-        return { thumbnail, rgb }
+        if(verbose) console.log('Thumbnail generado')
+        if (process) {
+            const { dominant } = await sharp(thumbnail).stats()    
+            const rgb = new Vector3(dominant.r, dominant.g, dominant.b)
+            return { thumbnail, rgb }
+        }
+        
     } catch (error) {
         throw new Error('Error redimensionando la imagen')
     }
@@ -76,7 +106,8 @@ function generateMosaics(thumbnails) {
 }
 
 module.exports = function generateThumbnails(dir) {
-    let images = []
+    let thumbs = []
+    let carouselThumbs = []
     fs.access(dir, fs.constants.F_OK, async (err) => {
         if (err) {
             console.log(err)
@@ -85,13 +116,13 @@ module.exports = function generateThumbnails(dir) {
         const files = fs.readdirSync(dir)
         files.forEach(path => {
             try {
-                images.push(processImage(path))
+                thumbs.push(createThumbnail(path, CELL))
+                carouselThumbs.push(createThumbnail(path, CAROUSEL_THUMBSIZE, false, true))
             } catch (error) {
                 console.log(error)
             }
         })
-        Promise.all(images).then((thumbnails) => {
-            generateMosaics(thumbnails)
-        })
+        Promise.all(thumbs).then((thumbnails) => generateMosaics(thumbnails))
+        Promise.all(carouselThumbs).then(() => console.log('Thumbs de carousel guardados'))
     })
 }

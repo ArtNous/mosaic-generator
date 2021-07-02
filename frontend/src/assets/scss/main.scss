@@ -1,3 +1,5 @@
+@import 'carousel';
+
 body{
     margin: 0;
     padding: 0;
@@ -13,12 +15,16 @@ body#settings {
 }
 
 canvas{   
-    width: 500px;
-    height: 500px;
+    width: 100%;
+    height: 100%;
     border-radius: 25px;
     box-shadow: 10px 10px 10px grey;
-    display: none;
     margin: auto;
+    background-color: darkslategrey;
+}
+
+.splide {
+    visibility: visible !important;
 }
 
 button {
@@ -45,7 +51,7 @@ header {
 
 #intro {
     height: 400px;
-    background-image: url('./cartel.jpg');
+    background-image: url('../../cartel.jpg');
     background-position: 0;
     background-size: 50%;
     padding: 5em;
@@ -103,8 +109,4 @@ header {
 #steps .number > small {
     font-size: 2em;
     color: white;
-}
-
-#mosaic {
-
 }

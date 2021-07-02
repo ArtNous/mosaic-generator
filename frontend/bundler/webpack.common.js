@@ -4,7 +4,7 @@ const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 
 module.exports = {
-    entry: path.resolve(__dirname, '../src/script.js'),
+    entry: path.resolve(__dirname, '../src/transitioner.js'),
     output:
     {
         filename: 'bundle.[contenthash].js',
@@ -33,13 +33,6 @@ module.exports = {
     {
         rules:
         [
-            // HTML
-            {
-                test: /\.(html)$/,
-                use: ['html-loader']
-            },
-
-            // JS
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
@@ -48,18 +41,15 @@ module.exports = {
                     'babel-loader'
                 ]
             },
-
-            // CSS
             {
-                test: /\.css$/,
+                test: /\.s[ac]ss$/,
                 use:
                 [
-                    MiniCSSExtractPlugin.loader,
-                    'css-loader'
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader'
                 ]
             },
-
-            // Images
             {
                 test: /\.(jpg|png|gif|svg)$/,
                 use:
@@ -73,20 +63,9 @@ module.exports = {
                     }
                 ]
             },
-
-            // Fonts
             {
-                test: /\.(ttf|eot|woff|woff2)$/,
-                use:
-                [
-                    {
-                        loader: 'file-loader',
-                        options:
-                        {
-                            outputPath: 'assets/fonts/'
-                        }
-                    }
-                ]
+                test: /\.(ttf|eot|woff|woff2)$/g,
+                type: 'asset/resource'
             }
         ]
     }

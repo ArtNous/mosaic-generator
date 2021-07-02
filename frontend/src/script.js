@@ -1,6 +1,7 @@
-import './style.css'
+import './assets/scss/main.scss'
 import gsap from 'gsap'
 import ax from './axios'
+import carousel from './carousel'
 
 import {
     Mesh, Scene, MeshBasicMaterial, PerspectiveCamera, PlaneGeometry, WebGLRenderer, TextureLoader, Vector2, Raycaster, BoxGeometry, Object3D, Vector3, Plane
