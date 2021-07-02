@@ -6,6 +6,8 @@ Document.prototype.addSlideToPrimary = function(img) {
     slide.classList.add('splide__slide')
     slide.append(imgElem)
     this.getElementById('primary-track').append(slide)
+
+    return slide
 }
 
 HTMLCollection.prototype.showUp = function() {
