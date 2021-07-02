@@ -4,7 +4,10 @@ const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 
 module.exports = {
-    entry: path.resolve(__dirname, '../src/transitioner.js'),
+    entry: {
+        helpers: path.resolve(__dirname, '../src/helpers.js'),
+        app: path.resolve(__dirname, '../src/transitioner.js')
+    },
     output:
     {
         filename: 'bundle.[contenthash].js',

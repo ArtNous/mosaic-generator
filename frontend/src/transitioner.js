@@ -19,6 +19,7 @@ import {
 } from 'three';
 import gsap from 'gsap'
 import './assets/scss/main.scss'
+import mountCarusels from './carousel'
 
 // import AnimatedPlane from './plane.class'
 
@@ -27,6 +28,8 @@ function getImages() {
         { src: 'https://assets.codepen.io/33787/img1.jpg' },
         { src: 'https://assets.codepen.io/33787/img2.jpg' },
         { src: 'https://assets.codepen.io/33787/img3.jpg' },
+        { src: 'https://assets.codepen.io/33787/img4.jpg' },
+        { src: 'https://assets.codepen.io/33787/img5.jpg' },
     ]
 }
 
@@ -65,7 +68,8 @@ function App() {
 
         Promise.all(conf.images.map(loadTexture)).then(responses => {
             initScene();
-            initListeners();
+            initListeners();            
+            mountCarusels()
 
             gsap.fromTo(plane1.uProgress,
                 {
@@ -227,6 +231,7 @@ function App() {
             loader.load(
                 img.src,
                 texture => {
+                    document.addSlideToPrimary(img.src)
                     textures[index] = texture;
                     resolve(texture);
                 }
