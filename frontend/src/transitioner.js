@@ -33,8 +33,7 @@ const conf = {
 };
 
 export function alternate(value) {
-    if (Number.isInteger(targetProgress)) targetProgress += value;
-    else targetProgress = Math.ceil(targetProgress);
+    targetProgress = Math.floor(targetProgress) + value;
     targetProgress = limit(targetProgress, 0, conf.images.length - 1);
 }
 
