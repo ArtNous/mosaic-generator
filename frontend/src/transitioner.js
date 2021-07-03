@@ -33,13 +33,20 @@ function getImages() {
     ]
 }
 
+let progress = 0, targetProgress = 0;
+
+const conf = {
+    size: 80,
+    images: getImages()
+};
+
+export function alternate(value) {
+    if (Number.isInteger(targetProgress)) targetProgress += value;
+    else targetProgress = Math.ceil(targetProgress);
+    targetProgress = limit(targetProgress, 0, conf.images.length - 1);
+}
+
 function App() {
-
-    const conf = {
-        size: 80,
-        images: getImages()
-    };
-
     let renderer, scene, camera, cameraCtrl;
     const screen = {
         width: 0, height: 0,
@@ -49,8 +56,7 @@ function App() {
 
     const loader = new TextureLoader();
     const textures = [];
-    let planes, plane1, plane2;
-    let progress = 0, targetProgress = 0;
+    let planes, plane1, plane2;    
 
     const mouse = new Vector2();
 
@@ -128,7 +134,7 @@ function App() {
         }, { passive: false });
 
         document.getElementById('mosaico').addEventListener('dblclick', e => {
-            evt.preventDefault();
+            e.preventDefault();
 
             const array = getMousePosition( evt.target, evt.clientX, evt.clientY );
             const onClickPosition = new Vector2().fromArray( array );
@@ -141,9 +147,9 @@ function App() {
                 const row = Math.floor(uv.y / tiles)
             } */
             if (e.clientY < screen.height / 2) {
-                navPrevious();
+                alternate(-1);
             } else {
-                navNext();
+                alternate(1);
             }
         });
     }

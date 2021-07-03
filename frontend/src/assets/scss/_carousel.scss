@@ -1,5 +1,5 @@
 section#carousel {
-    width: 50vh;
+    width: 600px;
     margin: auto;
 }
 
@@ -24,5 +24,17 @@ section#carousel {
         position: absolute;
         width: 100%;
         height: 400px;
+
+        button {
+            z-index: 100;
+        }
+
+        &#mosaic-viewer {
+            z-index: 2;
+        }
+
+        canvas {
+            z-index: 99;
+        }
     }
 }

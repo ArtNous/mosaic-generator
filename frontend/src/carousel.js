@@ -1,5 +1,7 @@
 import Splide from '@splidejs/splide';
 
+import { alternate } from './transitioner'
+
 export default function mountCarusels(images) {
 	document.getElementsByClassName('splide__slide').showUp()
 	const secondarySlider = new Splide('#secondary-slider', {
@@ -27,16 +29,16 @@ export default function mountCarusels(images) {
 		cover: true,
 	})
 
-	primarySlider.on('move', (newIndex, oldIndex) => {
+	secondarySlider.on('move', (newIndex, oldIndex) => {
 		const movedPlaces = newIndex - oldIndex
 		const url = new URL(`${SERVER}/carousel-images`)
 		const urlParams = new URLSearchParams()
-		urlParams.append('indices', [images.length - 1 + 	movedPlaces].join(','))
+		// urlParams.append('indices', [images.length - 1 + 	movedPlaces].join(','))
 		url.search = urlParams
-
+		
 		if(movedPlaces > 0) {
-			/* const pos = newIndex - 3 - movedPlaces
-			images.splice(Math.max(pos, 0), movedPlaces) */
+			const pos = newIndex - 3 - movedPlaces
+			alternate(1)
 			// Fetch al servidor pidiendo movedPlaces imagenes
 			/* fetch(url)
 			.then(response => response.json())
@@ -51,7 +53,7 @@ export default function mountCarusels(images) {
 				alert('Error obteniendo las imagenes')
 			}) */
 		} else {
-
+			alternate(-1)
 		}
 	})
 
