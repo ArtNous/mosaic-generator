@@ -26,6 +26,21 @@ module.exports = app => {
         }
     })
 
+    app.get('/paths',async (req, res) => {
+        const dir = './thumbnails'
+        try {
+            fs.accessSync(dir, fs.constants.F_OK)
+            const files = fs.readdirSync(dir)
+            files.splice(0,4)
+            res.json({ paths: files.map(name => ({src: `http://localhost:8080/${name}`})) })
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                msg: `No se encuentra el directorio ${dir}`
+            })
+        }
+    })
+
     app.get('/test', (req, res) => {
         res.json({
             msg: 'Funcionando perfecto'

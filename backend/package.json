@@ -4,7 +4,7 @@
   "description": "Generador de Mosaico",
   "main": "index.js",
   "scripts": {
-    "generate": "nodemon index.js"
+    "dev": "nodemon index.js"
   },
   "keywords": [
     "mosaico",

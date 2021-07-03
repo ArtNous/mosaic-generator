@@ -15,29 +15,21 @@ import {
     TextureLoader,
     Vector2,
     Vector3,
-    WebGLRenderer
+    WebGLRenderer,
+    ConeBufferGeometry
 } from 'three';
 import gsap from 'gsap'
 import './assets/scss/main.scss'
 import mountCarusels from './carousel'
+import ax from 'axios'
 
 // import AnimatedPlane from './plane.class'
-
-function getImages() {
-    return [
-        { src: 'https://assets.codepen.io/33787/img1.jpg' },
-        { src: 'https://assets.codepen.io/33787/img2.jpg' },
-        { src: 'https://assets.codepen.io/33787/img3.jpg' },
-        { src: 'https://assets.codepen.io/33787/img4.jpg' },
-        { src: 'https://assets.codepen.io/33787/img5.jpg' },
-    ]
-}
 
 let progress = 0, targetProgress = 0;
 
 const conf = {
     size: 80,
-    images: getImages()
+    images: []
 };
 
 export function alternate(value) {
@@ -47,6 +39,7 @@ export function alternate(value) {
 }
 
 function App() {
+    
     let renderer, scene, camera, cameraCtrl;
     const screen = {
         width: 0, height: 0,
@@ -71,10 +64,9 @@ function App() {
 
         updateSize();
         window.addEventListener('resize', onResize);
-
         Promise.all(conf.images.map(loadTexture)).then(responses => {
             initScene();
-            initListeners();            
+            initListeners();
             mountCarusels()
 
             gsap.fromTo(plane1.uProgress,
@@ -154,18 +146,6 @@ function App() {
         });
     }
 
-    function navNext() {
-        if (Number.isInteger(targetProgress)) targetProgress += 1;
-        else targetProgress = Math.ceil(targetProgress);
-        targetProgress = limit(targetProgress, 0, conf.images.length - 1);
-    }
-
-    function navPrevious() {
-        if (Number.isInteger(targetProgress)) targetProgress -= 1;
-        else targetProgress = Math.floor(targetProgress);
-        targetProgress = limit(targetProgress, 0, conf.images.length - 1);
-    }
-
     function updateProgress() {
         const progress1 = lerp(progress, targetProgress, 0.1);
         const pdiff = progress1 - progress;
@@ -177,10 +157,34 @@ function App() {
             const i = Math.floor(progress1);
             plane1.setTexture(textures[i]);
             plane2.setTexture(textures[i + 1]);
+            updateTexture(i)
         }
 
         progress = progress1;
         setPlanesProgress(progress % 1);
+    }
+
+    function updateTexture(i) {
+        console.info(i)
+        if (i - 2 > 0) textures[i - 3] = undefined
+
+        if (i - 2 < conf.images.length - 1) textures[i + 3] = undefined
+        if (i - 1 > 0 && textures[i - 2] === undefined) {
+            loader.load(
+                conf.images[i - 2],
+                texture => {
+                    textures[i - 2] = texture
+                }
+            );
+        }
+        if (i + 1 > 0 && textures[i + 2] === undefined) {
+            loader.load(
+                conf.images[i + 2],
+                texture => {
+                    textures[i + 2] = texture
+                }
+            );
+        }
     }
 
     function setPlanesProgress(progress) {
@@ -237,7 +241,6 @@ function App() {
             loader.load(
                 img.src,
                 texture => {
-                    document.addSlideToPrimary(img.src)
                     textures[index] = texture;
                     resolve(texture);
                 }
@@ -430,4 +433,10 @@ function lerp(a, b, x) {
     return a + x * (b - a);
 }
 
-App();
+ax({url: `${SERVER}/paths`}).then(response => {
+    response.data.paths.forEach(path => document.addSlideToPrimary(path.src))
+    conf.images = response.data.paths.slice(0,3)
+    App()
+}).catch(err => {
+    alert('Error obteniendo los paths de las imagenes')
+})

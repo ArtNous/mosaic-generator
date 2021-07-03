@@ -5,7 +5,6 @@ import { alternate } from './transitioner'
 export default function mountCarusels(images) {
 	document.getElementsByClassName('splide__slide').showUp()
 	const secondarySlider = new Splide('#secondary-slider', {
-		rewind: true,
 		fixedWidth: 100,
 		fixedHeight: 64,
 		isNavigation: true,
