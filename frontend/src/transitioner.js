@@ -31,15 +31,37 @@ const conf = {
     size: 80,
     images: []
 };
-
+let total
+const textures = [];
 export function alternate(value) {
-    targetProgress = Math.floor(targetProgress) + value;
-    targetProgress = limit(targetProgress, 0, conf.images.length - 1);
-    
+    targetProgress = limit(Math.floor(targetProgress) + value, 0, total - 1);
+    updateTexture(targetProgress)
+}
+
+function updateTexture(i) {
+    console.info(i)
+    if (i - 2 > 0) textures[i - 3] = undefined
+
+    if (i + 3 < conf.images.length - 1) textures[i + 4] = undefined
+    if (i - 1 > 0 && textures[i - 2] === undefined) {
+        loader.load(
+            conf.images[i - 2],
+            texture => {
+                textures[i - 2] = texture
+            }
+        );
+    }
+    if (i + 2 < conf.images.length - 1 && textures[i + 3] === undefined) {
+        loader.load(
+            conf.images[i + 3],
+            texture => {
+                textures[i + 3] = texture
+            }
+        );
+    }
 }
 
 function App() {
-    
     let renderer, scene, camera, cameraCtrl;
     const screen = {
         width: 0, height: 0,
@@ -48,8 +70,7 @@ function App() {
     };
 
     const loader = new TextureLoader();
-    const textures = [];
-    let planes, plane1, plane2;    
+    let planes, plane1, plane2;
 
     const mouse = new Vector2();
 
@@ -119,17 +140,17 @@ function App() {
         document.getElementById('mosaico').addEventListener('wheel', e => {
             e.preventDefault();
             if (e.deltaY > 0) {
-                targetProgress = limit(targetProgress + 1 / 20, 0, conf.images.length - 1);
+                targetProgress = limit(targetProgress + 1 / 20, 0, total - 1);
             } else {
-                targetProgress = limit(targetProgress - 1 / 20, 0, conf.images.length - 1);
+                targetProgress = limit(targetProgress - 1 / 20, 0, total - 1);
             }
         }, { passive: false });
 
         document.getElementById('mosaico').addEventListener('dblclick', e => {
             e.preventDefault();
 
-            const array = getMousePosition( evt.target, evt.clientX, evt.clientY );
-            const onClickPosition = new Vector2().fromArray( array );
+            const array = getMousePosition(evt.target, evt.clientX, evt.clientY);
+            const onClickPosition = new Vector2().fromArray(array);
 
             /* const intersects = getIntersects( onClickPosition, scene.children );
 
@@ -157,34 +178,10 @@ function App() {
             const i = Math.floor(progress1);
             plane1.setTexture(textures[i]);
             plane2.setTexture(textures[i + 1]);
-            updateTexture(i)
         }
 
         progress = progress1;
         setPlanesProgress(progress % 1);
-    }
-
-    function updateTexture(i) {
-        console.info(i)
-        if (i - 2 > 0) textures[i - 3] = undefined
-
-        if (i + 3 < conf.images.length - 1) textures[i + 4] = undefined
-        if (i - 1 > 0 && textures[i - 2] === undefined) {
-            loader.load(
-                conf.images[i - 2],
-                texture => {
-                    textures[i - 2] = texture
-                }
-            );
-        }
-        if (i + 2 < conf.images.length - 1 && textures[i + 3] === undefined) {
-            loader.load(
-                conf.images[i + 3],
-                texture => {
-                    textures[i + 3] = texture
-                }
-            );
-        }
     }
 
     function setPlanesProgress(progress) {
@@ -433,9 +430,11 @@ function lerp(a, b, x) {
     return a + x * (b - a);
 }
 
-ax({url: `${SERVER}/paths`}).then(response => {
-    response.data.paths.forEach(path => document.addSlideToPrimary(path.src))
-    conf.images = response.data.paths.slice(0,3)
+ax({ url: `${SERVER}/paths` }).then(response => {
+    const { paths } = response.data
+    paths.forEach(path => document.addSlideToPrimary(path.src))
+    total = paths.length
+    conf.images = paths.slice(0, 3)
     App()
 }).catch(err => {
     alert('Error obteniendo los paths de las imagenes')

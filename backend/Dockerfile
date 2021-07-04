@@ -15,4 +15,4 @@ RUN npm i
 
 COPY . .
 
-CMD ["npm", "run", "generate"]
+CMD ["npm", "run", "dev"]
