@@ -32,6 +32,7 @@ const conf = {
     images: []
 };
 let total
+const loader = new TextureLoader();
 const textures = [];
 export function alternate(value) {
     targetProgress = limit(Math.floor(targetProgress) + value, 0, total - 1);
@@ -45,7 +46,7 @@ function updateTexture(i) {
     if (i + 3 < conf.images.length - 1) textures[i + 4] = undefined
     if (i - 1 > 0 && textures[i - 2] === undefined) {
         loader.load(
-            conf.images[i - 2],
+            conf.images[i - 2]?.src,
             texture => {
                 textures[i - 2] = texture
             }
@@ -53,7 +54,7 @@ function updateTexture(i) {
     }
     if (i + 2 < conf.images.length - 1 && textures[i + 3] === undefined) {
         loader.load(
-            conf.images[i + 3],
+            conf.images[i + 3]?.src,
             texture => {
                 textures[i + 3] = texture
             }
@@ -69,7 +70,6 @@ function App() {
         ratio: 0
     };
 
-    const loader = new TextureLoader();
     let planes, plane1, plane2;
 
     const mouse = new Vector2();
@@ -392,7 +392,7 @@ class AnimatedPlane {
 
     initUV() {
         const ratio = this.nx / this.ny;
-        const tRatio = this.texture.image.width / this.texture.image.height;
+        const tRatio = this.texture?.image?.width / this.texture?.image?.height;
         if (ratio > tRatio) this.uvScale.set(1 / this.nx, (tRatio / ratio) / this.ny);
         else this.uvScale.set((ratio / tRatio) / this.nx, 1 / this.ny);
         const nW = this.uvScale.x * this.nx;
