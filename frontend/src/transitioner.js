@@ -35,6 +35,7 @@ const conf = {
 export function alternate(value) {
     targetProgress = Math.floor(targetProgress) + value;
     targetProgress = limit(targetProgress, 0, conf.images.length - 1);
+    
 }
 
 function App() {
@@ -167,7 +168,7 @@ function App() {
         console.info(i)
         if (i - 2 > 0) textures[i - 3] = undefined
 
-        if (i - 2 < conf.images.length - 1) textures[i + 3] = undefined
+        if (i + 3 < conf.images.length - 1) textures[i + 4] = undefined
         if (i - 1 > 0 && textures[i - 2] === undefined) {
             loader.load(
                 conf.images[i - 2],
@@ -176,11 +177,11 @@ function App() {
                 }
             );
         }
-        if (i + 1 > 0 && textures[i + 2] === undefined) {
+        if (i + 2 < conf.images.length - 1 && textures[i + 3] === undefined) {
             loader.load(
-                conf.images[i + 2],
+                conf.images[i + 3],
                 texture => {
-                    textures[i + 2] = texture
+                    textures[i + 3] = texture
                 }
             );
         }
