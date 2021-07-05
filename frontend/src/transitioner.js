@@ -21,11 +21,12 @@ import {
 import gsap from 'gsap'
 import './assets/scss/main.scss'
 import mountCarusels from './carousel'
-import ax from 'axios'
+import ax from './axios'
 
 // import AnimatedPlane from './plane.class'
 
 let progress = 0, targetProgress = 0;
+let thumbsCarousel
 
 const conf = {
     size: 80,
@@ -40,25 +41,14 @@ export function alternate(value) {
 }
 
 function updateTexture(i) {
-    console.info(i)
     if (i - 2 > 0) textures[i - 3] = undefined
 
-    if (i + 3 < conf.images.length - 1) textures[i + 4] = undefined
+    if (i + 2 < total - 1) textures[i + 3] = undefined
     if (i - 1 > 0 && textures[i - 2] === undefined) {
-        loader.load(
-            conf.images[i - 2]?.src,
-            texture => {
-                textures[i - 2] = texture
-            }
-        );
+        loadTexture({src: thumbsCarousel[i - 2]}, i - 2)
     }
-    if (i + 2 < conf.images.length - 1 && textures[i + 3] === undefined) {
-        loader.load(
-            conf.images[i + 3]?.src,
-            texture => {
-                textures[i + 3] = texture
-            }
-        );
+    if (i + 1 < total - 1 && textures[i + 2] === undefined) {
+        loadTexture({src: thumbsCarousel[i + 2]}, i + 2)
     }
 }
 
@@ -232,18 +222,18 @@ function App() {
         const w = h * camera.aspect;
         return [w, h];
     }
+}
 
-    function loadTexture(img, index) {
-        return new Promise(resolve => {
-            loader.load(
-                img.src,
-                texture => {
-                    textures[index] = texture;
-                    resolve(texture);
-                }
-            );
-        });
-    }
+function loadTexture(img, index) {
+    return new Promise(resolve => {
+        loader.load(
+            img.src,
+            texture => {
+                textures[index] = texture;
+                resolve(texture);
+            }
+        );
+    });
 }
 
 class AnimatedPlane {
@@ -431,10 +421,10 @@ function lerp(a, b, x) {
 }
 
 ax({ url: `${SERVER}/paths` }).then(response => {
-    const { paths } = response.data
-    paths.forEach(path => document.addSlideToPrimary(path.src))
-    total = paths.length
-    conf.images = paths.slice(0, 3)
+    thumbsCarousel = response.data.carousel
+    thumbsCarousel.forEach(path => document.addSlideToPrimary(path))
+    total = thumbsCarousel.length
+    conf.images = response.data.mosaics.slice(0, 3)
     App()
 }).catch(err => {
     alert('Error obteniendo los paths de las imagenes')

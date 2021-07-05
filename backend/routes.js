@@ -26,18 +26,24 @@ module.exports = app => {
         }
     })
 
-    app.get('/paths',async (req, res) => {
-        const dir = './thumbnails'
+    app.get('/paths', async (req, res) => {
+        const carouselThumbsDir = './thumbs_carousel'
+        const mosaicsDir = './thumbs_mosaicos'
         try {
-            fs.accessSync(dir, fs.constants.F_OK)
-            const files = fs.readdirSync(dir)
-            files.splice(0,4)
-            res.json({ paths: files.map(name => ({src: `http://localhost:8080/${name}`})) })
+            fs.accessSync(carouselThumbsDir, fs.constants.F_OK)
+            fs.accessSync(mosaicsDir, fs.constants.F_OK)
+            const carousels = fs.readdirSync(carouselThumbsDir)
+            const mosaics = fs.readdirSync(mosaicsDir)
+            carousels.splice(0,4)
+            mosaics.splice(0,4)
+            const resJson = {
+                mosaics: mosaics.map(path => `http://localhost:8080/${path}`),
+                carousels: carousels.map(path => `http://localhost:8080/${path}`)
+            }
+            res.json(resJson)
         } catch (error) {
             console.log(error);
-            res.status(500).json({
-                msg: `No se encuentra el directorio ${dir}`
-            })
+            res.status(500).json({ msg: `No se encuentra el directorio ${carouselThumbsDir}` })
         }
     })
 

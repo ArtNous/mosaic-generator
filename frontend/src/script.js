@@ -2,7 +2,6 @@ import './assets/scss/main.scss'
 import gsap from 'gsap'
 import ax from './axios'
 import carousel from './carousel'
-
 import {
     Mesh, Scene, MeshBasicMaterial, PerspectiveCamera, PlaneGeometry, WebGLRenderer, TextureLoader, Vector2, Raycaster, BoxGeometry, Object3D, Vector3, Plane
 } from 'three';
@@ -153,8 +152,8 @@ window.onload = () => {
             }
         })
 
-        render()
-        organizar()
+        /* render()
+        organizar() */
     }
 
     if(document.getElementById('btnGenerate')) {
@@ -178,12 +177,12 @@ window.onload = () => {
         })
     }
 
-    ax.post('grids').then(response => {
+    /* ax.post('grids').then(response => {
         const canvas = document.getElementsByTagName('canvas')[0]
         canvas.style.display = 'block'
         if (Array.isArray(response.data.thumbs) && response.data.thumbs.length > 0) {
             resolucion = response.data.resolution ?? resolucion
             loadImages(response.data.thumbs)
         }
-    }).catch(error => console.info(error))
+    }).catch(error => console.info(error)) */
 }

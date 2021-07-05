@@ -1,9 +1,11 @@
 import axios from 'axios'
 
-export default axios.create({
+const ax = axios.create({
     baseURL: SERVER,
     timeout: 30000,
     headers: {
         'Content-Type': 'application/json',
     }
 })
+
+export default ax

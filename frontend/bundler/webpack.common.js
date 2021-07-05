@@ -6,7 +6,8 @@ const path = require('path')
 module.exports = {
     entry: {
         helpers: path.resolve(__dirname, '../src/helpers.js'),
-        app: path.resolve(__dirname, '../src/transitioner.js')
+        app: path.resolve(__dirname, '../src/transitioner.js'),
+        settings: path.resolve(__dirname, '../src/script.js')
     },
     output:
     {
