@@ -64,11 +64,11 @@ async function createMosaic(imagePath, thumbnails) {
     }
 }
 
-async function createThumbnail(path, thumbSize, process = true, save = false, verbose = false) {
+async function createThumbnail(path, thumbSize, thumbsDir, process = true, save = false, verbose = false) {
     try {
         const thumbnail = await sharp(`${imagesDir}/${path}`).resize(thumbSize, thumbSize).toBuffer()
         
-        if (save) await sharp(thumbnail).toFile(`${thumbsDir}/sz_${thumbSize}_${path}`)
+        if (save) await sharp(thumbnail).toFile(`${thumbsDir}/${path}`)
 
         if(verbose) console.log('Thumbnail generado')
         if (process) {
@@ -116,13 +116,16 @@ module.exports = function generateThumbnails(dir) {
         const files = fs.readdirSync(dir)
         files.forEach(path => {
             try {
-                thumbs.push(createThumbnail(path, CELL))
-                carouselThumbs.push(createThumbnail(path, CAROUSEL_THUMBSIZE, false, true))
+                thumbs.push(createThumbnail(path, CELL, './thumbs_mosaicos'))
+                carouselThumbs.push(createThumbnail(path, CAROUSEL_THUMBSIZE, './thumbs_carousel', false, true))
             } catch (error) {
                 console.log(error)
             }
         })
-        Promise.all(thumbs).then((thumbnails) => generateMosaics(thumbnails))
+        Promise.all(thumbs).then((thumbnails) => {
+            console.log('Thumbs de mosaicos generados');
+            generateMosaics(thumbnails)
+        })
         Promise.all(carouselThumbs).then(() => console.log('Thumbs de carousel guardados'))
     })
 }
