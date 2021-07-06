@@ -9,8 +9,6 @@ const createRoutes = require('./routes')
 
 app.use(cors())
 app.use(express.json())
-app.use(express.static('thumbs_carousel'))
-app.use(express.static('thumbs_mosaicos'))
 app.use(express.static('public'))
 
 function server() {

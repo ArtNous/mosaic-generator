@@ -36,8 +36,8 @@ module.exports = app => {
             const carousels = fs.readdirSync(carouselThumbsDir)
             const mosaics = fs.readdirSync(mosaicsDir)
             const resJson = {
-                mosaics: mosaics.map(path => `${process.env.SERVER}/${path}`),
-                carousels: carousels.map(path => `${process.env.SERVER}/${path}`)
+                mosaics: mosaics.map(path => `${process.env.SERVER}/mosaics/${path}`),
+                carousels: carousels.map(path => `${process.env.SERVER}/thumbs_carousels${path}`)
             }
             res.json(resJson)
         } catch (error) {
