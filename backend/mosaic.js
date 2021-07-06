@@ -116,7 +116,7 @@ module.exports = function generateThumbnails(dir) {
         const files = fs.readdirSync(dir)
         files.forEach(path => {
             try {
-                //thumbs.push(createThumbnail(path, CELL, './thumbs_mosaicos'))
+                thumbs.push(createThumbnail(path, CELL, './thumbs_mosaicos'))
                 carouselThumbs.push(createThumbnail(path, CAROUSEL_THUMBSIZE, './thumbs_carousel', false, true))
             } catch (error) {
                 console.log(error)
@@ -124,7 +124,7 @@ module.exports = function generateThumbnails(dir) {
         })
         Promise.all(thumbs).then((thumbnails) => {
             console.log('Thumbs de mosaicos generados');
-            //generateMosaics(thumbnails)
+            generateMosaics(thumbnails)
         })
         Promise.all(carouselThumbs).then(() => console.log('Thumbs de carousel guardados'))
     })
