@@ -22,12 +22,11 @@ import gsap from 'gsap'
 import './assets/scss/main.scss'
 import mountCarusels from './carousel'
 import ax from './axios'
-import axios from 'axios'
 
 // import AnimatedPlane from './plane.class'
 
 let progress = 0, targetProgress = 0;
-let thumbsCarousel
+let thumbsCarousel, mosaics
 
 const conf = {
     size: 80,
@@ -46,10 +45,10 @@ function updateTexture(i) {
 
     if (i + 2 < total - 1) textures[i + 3] = undefined
     if (i - 1 > 0 && textures[i - 2] === undefined) {
-        loadTexture({src: thumbsCarousel[i - 2]}, i - 2)
+        loadTexture({src: mosaics[i - 2]}, i - 2)
     }
     if (i + 1 < total - 1 && textures[i + 2] === undefined) {
-        loadTexture({src: thumbsCarousel[i + 2]}, i + 2)
+        loadTexture({src: mosaics[i + 2]}, i + 2)
     }
 }
 
@@ -425,6 +424,7 @@ ax
 .get('paths')
 .then(response => {
     thumbsCarousel = response.data.carousels
+    mosaics = response.data.mosaics
     thumbsCarousel.forEach(path => document.addSlideToPrimary(path))
     total = thumbsCarousel.length
     conf.images = response.data.mosaics.slice(0, 3).map((path) => ({src: path}))
