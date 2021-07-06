@@ -427,8 +427,16 @@ ax
     thumbsCarousel = response.data.carousels
     thumbsCarousel.forEach(path => document.addSlideToPrimary(path))
     total = thumbsCarousel.length
-    conf.images = response.data.mosaics.slice(0, 3)
+    conf.images = response.data.mosaics.slice(0, 3).map((path) => ({src: path}))
     App()
 }).catch(err => {
     alert('Error obteniendo los paths de las imagenes')
 })
+
+if(document.getElementById('btnGenerate')) {
+    document.getElementById('btnGenerate').addEventListener('click', e => {
+        ax.post('/').then(response => {
+            alert(response.data.msg)
+        }).catch(error => alert('Hubo un error al generar el mosaico'))
+    })
+}
