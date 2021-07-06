@@ -9,6 +9,7 @@ emitter.addListener('mosaic-generated', () => {
 })
 
 module.exports = {
+    CAROUSEL_THUMBSIZE: 96,
     CELL_EXTRACT: 10,
     CELL: 30,
     IMAGE_SIZE: 1000,
