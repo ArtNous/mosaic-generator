@@ -22,6 +22,7 @@ import gsap from 'gsap'
 import './assets/scss/main.scss'
 import mountCarusels from './carousel'
 import ax from './axios'
+import axios from 'axios'
 
 // import AnimatedPlane from './plane.class'
 
@@ -420,8 +421,10 @@ function lerp(a, b, x) {
     return a + x * (b - a);
 }
 
-ax({ url: `${SERVER}/paths` }).then(response => {
-    thumbsCarousel = response.data.carousel
+ax
+.get('paths')
+.then(response => {
+    thumbsCarousel = response.data.carousels
     thumbsCarousel.forEach(path => document.addSlideToPrimary(path))
     total = thumbsCarousel.length
     conf.images = response.data.mosaics.slice(0, 3)
