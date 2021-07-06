@@ -1,6 +1,7 @@
 const generateThumbnails = require('./mosaic')
 const db = require('./models')
 const fs = require('fs')
+require('dotenv').config()
 
 module.exports = app => {
     app.post('/', (req, res) => {
@@ -37,8 +38,8 @@ module.exports = app => {
             carousels.splice(0,4)
             mosaics.splice(0,4)
             const resJson = {
-                mosaics: mosaics.map(path => `http://localhost:8080/${path}`),
-                carousels: carousels.map(path => `http://localhost:8080/${path}`)
+                mosaics: mosaics.map(path => `${process.env.SERVER}/${path}`),
+                carousels: carousels.map(path => `${process.env.SERVER}/${path}`)
             }
             res.json(resJson)
         } catch (error) {
