@@ -26,7 +26,7 @@ import ax from './axios'
 // import AnimatedPlane from './plane.class'
 
 let progress = 0, targetProgress = 0;
-let thumbsCarousel, mosaics
+let thumbsCarousel, mosaics, carousel
 
 const conf = {
     size: 80,
@@ -39,6 +39,16 @@ export function alternate(value) {
     targetProgress = limit(Math.floor(targetProgress) + value, 0, total - 1);
     updateTexture(targetProgress)
 }
+
+document.getElementById('arrow_prev').addEventListener('click', (e) => {
+    targetProgress = Math.floor(targetProgress) - 1;
+    carousel.go(targetProgress)
+})
+
+document.getElementById('arrow_next').addEventListener('click', (e) => {
+    targetProgress = Math.floor(targetProgress) - 1;
+    carousel.go(targetProgress)
+})
 
 function updateTexture(i) {
     if (i - 2 > 0) textures[i - 3] = undefined
@@ -78,7 +88,7 @@ function App() {
         Promise.all(conf.images.map(loadTexture)).then(responses => {
             initScene();
             initListeners();
-            mountCarusels()
+            carousel = mountCarusels()
 
             gsap.fromTo(plane1.uProgress,
                 {
@@ -168,6 +178,7 @@ function App() {
             const i = Math.floor(progress1);
             plane1.setTexture(textures[i]);
             plane2.setTexture(textures[i + 1]);
+            if(carousel) carousel.go(i)
         }
 
         progress = progress1;
