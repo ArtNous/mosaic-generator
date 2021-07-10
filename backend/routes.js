@@ -28,8 +28,8 @@ module.exports = app => {
     })
 
     app.get('/paths', async (req, res) => {
-        const carouselThumbsDir = './thumbs_carousel'
-        const mosaicsDir = './mosaics'
+        const carouselThumbsDir = './public/thumbs_carousel'
+        const mosaicsDir = './public/mosaics'
         try {
             fs.accessSync(carouselThumbsDir, fs.constants.F_OK)
             fs.accessSync(mosaicsDir, fs.constants.F_OK)

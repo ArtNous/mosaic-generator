@@ -42,8 +42,6 @@ export function alternate(value) {
     updateTexture(targetProgress)
 }
 
-
-
 function updateTexture(i) {
     if (i - 2 > 0) textures[i - 3] = undefined
 
@@ -241,11 +239,13 @@ function App() {
 }
 
 function loadTexture(img, index) {
+    document.getElementById('loading').style.display = 'block'
     return new Promise(resolve => {
         loader.load(
             img.src,
             texture => {
                 textures[index] = texture;
+                document.getElementById('loading').style.display = 'none'
                 resolve(texture);
             }
         );
@@ -439,6 +439,7 @@ function lerp(a, b, x) {
 ax
 .get('paths')
 .then(response => {
+    document.getElementById('loading').style.display = 'none'
     thumbsCarousel = response.data.carousels
     mosaics = response.data.mosaics
     thumbsCarousel.forEach(path => document.addSlideToPrimary(path))
@@ -447,6 +448,7 @@ ax
     App()
 }).catch(err => {
     alert('Error obteniendo los paths de las imagenes')
+    document.getElementById('loading').style.display = 'none'
 })
 
 if(document.getElementById('btnGenerate')) {
