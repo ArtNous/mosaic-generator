@@ -29,26 +29,20 @@ let progress = 0, targetProgress = 0;
 let thumbsCarousel, mosaics, carousel
 
 const conf = {
-    size: 80,
+    size: 15,
     images: []
 };
 let total
 const loader = new TextureLoader();
 const textures = [];
+let extended = false
+
 export function alternate(value) {
     targetProgress = limit(Math.floor(targetProgress) + value, 0, total - 1);
     updateTexture(targetProgress)
 }
 
-document.getElementById('arrow_prev').addEventListener('click', (e) => {
-    targetProgress = Math.floor(targetProgress) - 1;
-    carousel.go(targetProgress)
-})
 
-document.getElementById('arrow_next').addEventListener('click', (e) => {
-    targetProgress = Math.floor(targetProgress) - 1;
-    carousel.go(targetProgress)
-})
 
 function updateTexture(i) {
     if (i - 2 > 0) textures[i - 3] = undefined
@@ -74,6 +68,15 @@ function App() {
 
     const mouse = new Vector2();
 
+    if(document.getElementById('btnExtend')) {
+        document.getElementById('btnExtend').addEventListener('click', function() {
+            extended = !extended
+            updateSize(!extended)
+            document.getElementById('carousel').classList.toggle('extended')
+            this.innerHTML = extended ? 'Reducir' : 'Ampliar'
+        })
+    }
+
     init();
 
     function init() {
@@ -83,12 +86,13 @@ function App() {
         camera = new PerspectiveCamera(50);
         camera.position.z = 100;
 
-        updateSize();
+        updateSize(true);
         window.addEventListener('resize', onResize);
         Promise.all(conf.images.map(loadTexture)).then(responses => {
-            initScene();
-            initListeners();
+            initScene()
+            initListeners()
             carousel = mountCarusels()
+            carousel.on('move', (newIndex, oldIndex) => targetProgress = newIndex)
 
             gsap.fromTo(plane1.uProgress,
                 {
@@ -179,6 +183,7 @@ function App() {
             plane1.setTexture(textures[i]);
             plane2.setTexture(textures[i + 1]);
             if(carousel) carousel.go(i)
+            updateTexture(i)
         }
 
         progress = progress1;
@@ -212,12 +217,12 @@ function App() {
         resizeTimeout = setTimeout(updateSize, 200);
     }
 
-    function updateSize() {
+    function updateSize(init = false) {
         screen.width = window.innerWidth;
         screen.height = window.innerHeight;
         screen.ratio = screen.width / screen.height;
         if (renderer && camera) {
-            renderer.setSize(screen.width / 2, screen.height / 2);
+            renderer.setSize(init ? screen.width / 2 : screen.width, init ? screen.height / 2 : screen.height);
             camera.aspect = screen.ratio;
             camera.updateProjectionMatrix();
             const wsize = getRendererSize();

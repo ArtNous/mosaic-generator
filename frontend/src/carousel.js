@@ -1,34 +1,22 @@
 import Splide from '@splidejs/splide';
 
-import { alternate } from './transitioner'
-
-export default function mountCarusels(images) {
+export default function mountCarusels() {
 	document.getElementsByClassName('splide__slide').showUp()
-	const secondarySlider = new Splide('#secondary-slider', {
+	const slider = new Splide('#slider', {
 		fixedWidth: 100,
-		fixedHeight: 64,
-		isNavigation: true,
+		height: 60,
 		gap: 10,
-		focus: 'center',
-		pagination: false,
 		cover: true,
+		pagination: false,
+		isNavigation: true,
 		breakpoints: {
 			'600': {
 				fixedWidth: 66,
-				fixedHeight: 40,
+				height: 40,
 			}
-		}
+		},
+		focus: 'center'
 	}).mount();
 
-	const primarySlider = new Splide('#primary-slider', {
-		type: 'fade',
-		heightRatio: 0.5,
-		pagination: false,
-		arrows: false,
-		cover: true,
-	})	
-
-	primarySlider.sync(secondarySlider).mount()	
-
-	return secondarySlider
+	return slider
 }

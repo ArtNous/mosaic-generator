@@ -6,7 +6,7 @@
         imgElem.src = img
         slide.classList.add('splide__slide')
         slide.append(imgElem)
-        this.getElementById('primary-track').append(slide)
+        this.getElementsByClassName('splide__list')[0].append(slide)
     
         return slide
     }

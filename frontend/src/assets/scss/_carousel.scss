@@ -1,40 +1,19 @@
 section#carousel {
     width: 600px;
     margin: auto;
-}
 
-#primary-slider {
-    margin-bottom: 20px;
-}
-
-.splide__arrows {
-    height: 430px;
-
-    .splide__arro {
-        padding: 10px;
-        background-color: coral;
-        border-radius: 0.6em;
+    &.extended{
         margin: 0;
-    
-        &#arrow_prev { left: 0; }
-        &#arrow_prev { right: 0; }
-    }
-    
-    .viewport {
-        position: absolute;
         width: 100%;
-        height: 400px;
+    }
+}
 
-        button {
-            z-index: 100;
-        }
-
-        &#mosaic-viewer {
-            z-index: 2;
-        }
-
-        canvas {
-            z-index: 99;
-        }
+.splide__slide {
+    &.is-active {
+        .img { border: blue; }
+    }
+    .img {
+        width : 100%;
+        height: auto;
     }
 }
