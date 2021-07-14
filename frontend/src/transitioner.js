@@ -47,10 +47,10 @@ function updateTexture(i) {
 
     if (i + 2 < total - 1) textures[i + 3] = undefined
     if (i - 1 > 0 && textures[i - 2] === undefined) {
-        loadTexture({src: mosaics[i - 2]}, i - 2)
+        loadTexture2({ src: mosaics[i - 2] }, i - 2)
     }
     if (i + 1 < total - 1 && textures[i + 2] === undefined) {
-        loadTexture({src: mosaics[i + 2]}, i + 2)
+        loadTexture2({ src: mosaics[i + 2] }, i + 2)
     }
 }
 
@@ -66,8 +66,8 @@ function App() {
 
     const mouse = new Vector2();
 
-    if(document.getElementById('btnExtend')) {
-        document.getElementById('btnExtend').addEventListener('click', function() {
+    if (document.getElementById('btnExtend')) {
+        document.getElementById('btnExtend').addEventListener('click', function () {
             extended = !extended
             updateSize(!extended)
             document.getElementById('carousel').classList.toggle('extended')
@@ -90,7 +90,11 @@ function App() {
             initScene()
             initListeners()
             carousel = mountCarusels()
-            carousel.on('move', (newIndex, oldIndex) => targetProgress = newIndex)
+            // carousel.on('move', (newIndex, oldIndex) => targetProgress += newIndex - oldIndex)
+            carousel.on('click', (slide) => carousel.go(slide.index))
+            carousel.on('pagination:updated', (data, prev, active) => {
+                targetProgress = active.page
+            })
 
             gsap.fromTo(plane1.uProgress,
                 {
@@ -180,8 +184,8 @@ function App() {
             const i = Math.floor(progress1);
             plane1.setTexture(textures[i]);
             plane2.setTexture(textures[i + 1]);
-            if(carousel) carousel.go(i)
-            updateTexture(i)
+            if (carousel) carousel.go(targetProgress)
+            // updateTexture(i)
         }
 
         progress = progress1;
@@ -239,19 +243,32 @@ function App() {
 }
 
 function loadTexture(img, index) {
-    document.getElementById('loading').style.display = 'block'
+    // document.getElementById('loading').style.display = 'block'
     return new Promise(resolve => {
         loader.load(
             img.src,
             texture => {
                 textures[index] = texture;
-                document.getElementById('loading').style.display = 'none'
+                if (carousel) {
+                    carousel.add('<li class="splide__slide">' + (carousel.length + 1) + '</li>');
+                }
+                // document.getElementById('loading').style.display = 'none'
                 resolve(texture);
             }
         );
     });
 }
 
+function loadTexture2(img, index) {
+    loader.load(
+        img.src,
+        texture => {
+            textures[index] = texture;
+            if (carousel) {
+                carousel.add('<li class="splide__slide">' + (carousel.length + 1) + '</li>');
+            }
+        });
+}
 class AnimatedPlane {
     constructor(params) {
         for (const [key, value] of Object.entries(params)) {
@@ -437,21 +454,21 @@ function lerp(a, b, x) {
 }
 
 ax
-.get('paths')
-.then(response => {
-    document.getElementById('loading').style.display = 'none'
-    thumbsCarousel = response.data.carousels
-    mosaics = response.data.mosaics
-    thumbsCarousel.forEach(path => document.addSlideToPrimary(path))
-    total = thumbsCarousel.length
-    conf.images = response.data.mosaics.slice(0, 3).map((path) => ({src: path}))
-    App()
-}).catch(err => {
-    alert('Error obteniendo los paths de las imagenes')
-    document.getElementById('loading').style.display = 'none'
-})
+    .get('paths')
+    .then(response => {
+        document.getElementById('loading').style.display = 'none'
+        thumbsCarousel = response.data.carousels
+        mosaics = response.data.mosaics
+        thumbsCarousel.forEach(path => document.addSlideToPrimary(path))
+        total = thumbsCarousel.length
+        conf.images = response.data.mosaics.slice(0, 10).map((path) => ({ src: path }))
+        App()
+    }).catch(err => {
+        alert('Error obteniendo los paths de las imagenes')
+        document.getElementById('loading').style.display = 'none'
+    })
 
-if(document.getElementById('btnGenerate')) {
+if (document.getElementById('btnGenerate')) {
     document.getElementById('btnGenerate').addEventListener('click', e => {
         ax.post('/').then(response => {
             alert(response.data.msg)
