@@ -19,6 +19,7 @@ import {
     ConeBufferGeometry
 } from 'three';
 import gsap from 'gsap'
+import 'loadme/dist/style/loadme.css'
 import './assets/scss/main.scss'
 import mountCarusels from './carousel'
 import ax from './axios'
@@ -89,6 +90,7 @@ function App() {
         updateSize(true);
         window.addEventListener('resize', onResize);
         Promise.all(conf.images.map(loadTexture)).then(responses => {
+            
             initScene()
             initListeners()
             carousel = mountCarusels()
@@ -450,21 +452,28 @@ function reloadAll(page) {
             carousel.remove(carousel.length - 1)
         }
         // poner loader
+        document.getElementById('carousel').style.display = 'none'
+        document.getElementById('loader').style.display = 'block'
         Promise.all(newMosaics.map(loadTexture)).then(() => {
+            document.getElementById('loader').style.display = 'none'
             targetProgress = 0
             // quitar loader
             const newThumbs = thumbsCarousel.slice(start, end)
             
             newThumbs.forEach(path => carousel.add(`<li class="splide__slide"><img src="${path}" /></li>`))
+            document.getElementById('carousel').style.display = 'block'
             plane1.setTexture(textures.slice(0, 1)[0]);
             plane2.setTexture(textures.slice(1 , 2)[0]);
         })
     }
 }
-
+document.getElementById('loader').style.display = 'block'
+document.getElementById('carousel').style.visibility = 'hidden'
 ax
     .get('paths')
     .then(response => {
+        document.getElementById('loader').style.display = 'none'
+        document.getElementById('carousel').style.visibility = 'inherit'
         document.getElementById('loading').style.display = 'none'
         thumbsCarousel = response.data.carousels
         mosaics = response.data.mosaics
@@ -489,6 +498,7 @@ ax
         App()
     }).catch(err => {
         alert('Error obteniendo los paths de las imagenes')
+        document.getElementById('loader').style.display = 'none'
         document.getElementById('loading').style.display = 'none'
     })
 
