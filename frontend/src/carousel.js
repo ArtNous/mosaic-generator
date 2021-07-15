@@ -8,7 +8,7 @@ export default function mountCarusels() {
 		perPage: 5,
 		arrows: true,
 		focus: 'center',
-		isNavigation:true,
+		isNavigation: true,
 	})
 
 	slider.mount()

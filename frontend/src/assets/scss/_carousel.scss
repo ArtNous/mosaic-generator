@@ -1,3 +1,7 @@
+a {
+    text-decoration: none;
+}
+
 section#carousel {
     width: 600px;
     margin: auto;
@@ -15,5 +19,22 @@ section#carousel {
     .img {
         width : 100%;
         height: auto;
+    }
+}
+
+#pagination {
+    width: 100%;
+    text-align: center;
+
+    .pagination-item {
+        display: inline-block;
+        
+        a {
+            margin: 0 10px;
+            border-radius: 50%;
+            background-color: darkgoldenrod ;
+            color: white;
+            padding: 10px;
+        }
     }
 }

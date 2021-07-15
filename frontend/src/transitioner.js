@@ -26,7 +26,7 @@ import ax from './axios'
 // import AnimatedPlane from './plane.class'
 
 let progress = 0, targetProgress = 0;
-let thumbsCarousel, mosaics, carousel
+let thumbsCarousel, mosaics, carousel, plane1, plane2, lastPage
 
 const conf = {
     size: 15,
@@ -36,6 +36,8 @@ let total
 const loader = new TextureLoader();
 const textures = [];
 let extended = false
+
+const PATHS_PER_PAGE = 10
 
 export function alternate(value) {
     targetProgress = limit(Math.floor(targetProgress) + value, 0, total - 1);
@@ -62,7 +64,7 @@ function App() {
         ratio: 0
     };
 
-    let planes, plane1, plane2;
+    let planes
 
     const mouse = new Vector2();
 
@@ -93,7 +95,7 @@ function App() {
             // carousel.on('move', (newIndex, oldIndex) => targetProgress += newIndex - oldIndex)
             carousel.on('click', (slide) => carousel.go(slide.index))
             carousel.on('pagination:updated', (data, prev, active) => {
-                targetProgress = active.page
+                if (active) targetProgress = active.page
             })
 
             gsap.fromTo(plane1.uProgress,
@@ -114,19 +116,18 @@ function App() {
     function initScene() {
         scene = new Scene();
         scene.background = new Color(0);
-
         plane1 = new AnimatedPlane({
             renderer, screen,
             size: conf.size,
             anim: 1,
-            texture: textures[0]
+            texture: textures.slice(0, 1)[0]
         });
 
         plane2 = new AnimatedPlane({
             renderer, screen,
             size: conf.size,
             anim: 2,
-            texture: textures[1]
+            texture: textures.slice(1, 2)[0]
         });
 
         setPlanesProgress(0);
@@ -182,8 +183,8 @@ function App() {
         const p1 = progress1 % 1;
         if ((pdiff > 0 && p1 < p0) || (pdiff < 0 && p0 < p1)) {
             const i = Math.floor(progress1);
-            plane1.setTexture(textures[i]);
-            plane2.setTexture(textures[i + 1]);
+            plane1.setTexture(textures.slice(i, i + 1)[0]);
+            plane2.setTexture(textures.slice(i + 1, i + 2)[0]);
             if (carousel) carousel.go(targetProgress)
             // updateTexture(i)
         }
@@ -249,26 +250,12 @@ function loadTexture(img, index) {
             img.src,
             texture => {
                 textures[index] = texture;
-                if (carousel) {
-                    carousel.add('<li class="splide__slide">' + (carousel.length + 1) + '</li>');
-                }
-                // document.getElementById('loading').style.display = 'none'
                 resolve(texture);
             }
         );
     });
 }
 
-function loadTexture2(img, index) {
-    loader.load(
-        img.src,
-        texture => {
-            textures[index] = texture;
-            if (carousel) {
-                carousel.add('<li class="splide__slide">' + (carousel.length + 1) + '</li>');
-            }
-        });
-}
 class AnimatedPlane {
     constructor(params) {
         for (const [key, value] of Object.entries(params)) {
@@ -293,11 +280,11 @@ class AnimatedPlane {
                 shader.vertexShader = `
             uniform float progress;
             uniform vec2 uvScale;
-  
+
             attribute vec3 offset;
             attribute vec3 rotation;
             attribute vec2 uvOffset;
-  
+
             mat3 rotationMatrixXYZ(vec3 r)
             {
               float cx = cos(r.x);
@@ -306,7 +293,7 @@ class AnimatedPlane {
               float sy = sin(r.y);
               float cz = cos(r.z);
               float sz = sin(r.z);
-  
+
               return mat3(
                  cy * cz, cx * sz + sx * sy * cz, sx * sz - cx * sy * cz,
                 -cy * sz, cx * cz - sx * sy * sz, sx * cz + cx * sy * sz,
@@ -323,14 +310,14 @@ class AnimatedPlane {
                 shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>', `
             mat3 rotMat = rotationMatrixXYZ(progress * rotation);
             transformed = rotMat * transformed;
-  
+
             vec4 mvPosition = vec4(transformed, 1.0);
             #ifdef USE_INSTANCING
               mvPosition = instanceMatrix * mvPosition;
             #endif
-  
+
             mvPosition.xyz += progress * offset;
-  
+
             mvPosition = modelViewMatrix * mvPosition;
             gl_Position = projectionMatrix * mvPosition;
           `);
@@ -453,14 +440,51 @@ function lerp(a, b, x) {
     return a + x * (b - a);
 }
 
+function reloadAll(page) {
+    if(page) {
+        const start = PATHS_PER_PAGE * (page - 1)
+        const end = PATHS_PER_PAGE * page > mosaics.length ? mosaics.length: PATHS_PER_PAGE * page
+        const newMosaics = mosaics.slice(start, end).map(path => ({src: path}))
+        const initialLength = carousel.length
+        for(let i = 0; i < initialLength; i++) {
+            carousel.remove(carousel.length - 1)
+        }
+        // poner loader
+        Promise.all(newMosaics.map(loadTexture)).then(() => {
+            targetProgress = 0
+            // quitar loader
+            const newThumbs = thumbsCarousel.slice(start, end)
+            
+            newThumbs.forEach(path => carousel.add(`<li class="splide__slide"><img src="${path}" /></li>`))
+            plane1.setTexture(textures.slice(0, 1)[0]);
+            plane2.setTexture(textures.slice(1 , 2)[0]);
+        })
+    }
+}
+
 ax
     .get('paths')
     .then(response => {
         document.getElementById('loading').style.display = 'none'
         thumbsCarousel = response.data.carousels
         mosaics = response.data.mosaics
-        thumbsCarousel.forEach(path => document.addSlideToPrimary(path))
-        total = thumbsCarousel.length
+        thumbsCarousel.slice(0, Math.min(10, thumbsCarousel.length)).forEach(path => document.addSlideToPrimary(path))
+        lastPage = Math.ceil(thumbsCarousel.length / PATHS_PER_PAGE)
+        for(let count = 0; count < Math.ceil(thumbsCarousel.length / PATHS_PER_PAGE); count++) {
+            const li = document.createElement('li')
+            const link = document.createElement('a')
+            link.href = '#'
+            link.addEventListener('click', e => {
+                e.preventDefault()
+                reloadAll(parseInt(e.currentTarget.dataset.page))
+            })
+            li.classList.add('pagination-item')
+            const page = count + 1
+            link.innerText = page
+            link.dataset.page = page
+            li.append(link)
+            document.getElementById('pagination').append(li)
+        }
         conf.images = response.data.mosaics.slice(0, 10).map((path) => ({ src: path }))
         App()
     }).catch(err => {

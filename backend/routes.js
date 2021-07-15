@@ -28,6 +28,7 @@ module.exports = app => {
     })
 
     app.get('/paths', async (req, res) => {
+        const PATHS_PER_PAGE = 10
         const carouselThumbsDir = './public/thumbs_carousel'
         const mosaicsDir = './public/mosaics'
         try {
@@ -35,6 +36,9 @@ module.exports = app => {
             fs.accessSync(mosaicsDir, fs.constants.F_OK)
             const carousels = fs.readdirSync(carouselThumbsDir)
             const mosaics = fs.readdirSync(mosaicsDir)
+
+            const pages = Math.ceil(mosaics / PATHS_PER_PAGE)
+
             const resJson = {
                 mosaics: mosaics.map(path => `${process.env.SERVER}/mosaics/${path}`),
                 carousels: carousels.map(path => `${process.env.SERVER}/thumbs_carousel/${path}`)
