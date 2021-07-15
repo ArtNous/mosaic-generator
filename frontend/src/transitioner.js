@@ -464,6 +464,10 @@ function reloadAll(page) {
             document.getElementById('carousel').style.display = 'block'
             plane1.setTexture(textures.slice(0, 1)[0]);
             plane2.setTexture(textures.slice(1 , 2)[0]);
+        }).catch(() => {
+            alert('Ocurrio un error al colocar los nuevos Mosaicos')
+            document.getElementById('carousel').style.display = 'block'
+            document.getElementById('loader').style.display = 'none'
         })
     }
 }
