@@ -1,10 +1,8 @@
 import {
     BufferAttribute,
-    BufferGeometry,
     PlaneGeometry,
     Color,
     DoubleSide,
-    Face3,
     InstancedBufferAttribute,
     InstancedMesh,
     MathUtils,
@@ -16,18 +14,18 @@ import {
     Vector2,
     Vector3,
     WebGLRenderer,
-    ConeBufferGeometry
 } from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import gsap from 'gsap'
 import 'loadme/dist/style/loadme.css'
 import './assets/scss/main.scss'
-import mountCarusels from './carousel'
+import mountCarusels, { showLoader, hideLoader } from './carousel'
 import ax from './axios'
 
 // import AnimatedPlane from './plane.class'
 
 let progress = 0, targetProgress = 0;
-let thumbsCarousel, mosaics, carousel, plane1, plane2, lastPage
+let thumbsCarousel, mosaics, carousel, plane1, plane2, totalMosaics, totalThumbsCarousel
 
 const conf = {
     size: 15,
@@ -50,15 +48,15 @@ function updateTexture(i) {
 
     if (i + 2 < total - 1) textures[i + 3] = undefined
     if (i - 1 > 0 && textures[i - 2] === undefined) {
-        loadTexture2({ src: mosaics[i - 2] }, i - 2)
+        loadTexture({ src: mosaics[i - 2] }, i - 2)
     }
     if (i + 1 < total - 1 && textures[i + 2] === undefined) {
-        loadTexture2({ src: mosaics[i + 2] }, i + 2)
+        loadTexture({ src: mosaics[i + 2] }, i + 2)
     }
 }
 
 function App() {
-    let renderer, scene, camera, cameraCtrl;
+    let renderer, scene, camera;
     const screen = {
         width: 0, height: 0,
         wWidth: 0, wHeight: 0,
@@ -78,19 +76,35 @@ function App() {
         })
     }
 
+    if (document.getElementById('btnZoomin')) {
+        document.getElementById('btnZoomin').addEventListener('click', function () {
+            camera.zoom += 1
+        })
+    }
+
+    if (document.getElementById('btnZoomout')) {
+        document.getElementById('btnZoomout').addEventListener('click', function () {
+            camera.zoom -= 50
+        })
+    }
+
     init();
 
     function init() {
-        renderer = new WebGLRenderer({ canvas: document.getElementById('mosaico') });
+        const canvas = document.getElementById('mosaico')
+        renderer = new WebGLRenderer({ canvas });
         renderer.setSize(window.innerWidth / 2, window.innerHeight / 2)
 
         camera = new PerspectiveCamera(50);
         camera.position.z = 100;
+        const controls = new OrbitControls(camera, canvas);
+        controls.target.set(0, 5, 0);
+        controls.update();
 
         updateSize(true);
         window.addEventListener('resize', onResize);
         Promise.all(conf.images.map(loadTexture)).then(responses => {
-            
+
             initScene()
             initListeners()
             carousel = mountCarusels()
@@ -146,34 +160,14 @@ function App() {
             mouse.y = -(e.clientY / screen.height) * 2 + 1;
         });
 
-        document.getElementById('mosaico').addEventListener('wheel', e => {
+        /* document.getElementById('mosaico').addEventListener('wheel', e => {
             e.preventDefault();
             if (e.deltaY > 0) {
                 targetProgress = limit(targetProgress + 1 / 20, 0, total - 1);
             } else {
                 targetProgress = limit(targetProgress - 1 / 20, 0, total - 1);
             }
-        }, { passive: false });
-
-        document.getElementById('mosaico').addEventListener('dblclick', e => {
-            e.preventDefault();
-
-            const array = getMousePosition(evt.target, evt.clientX, evt.clientY);
-            const onClickPosition = new Vector2().fromArray(array);
-
-            /* const intersects = getIntersects( onClickPosition, scene.children );
-
-            if ( intersects.length > 0 && intersects[ 0 ].uv ) {
-                const uv = intersects[ 0 ].uv;
-                const col = Math.floor(uv.x / tiles)
-                const row = Math.floor(uv.y / tiles)
-            } */
-            if (e.clientY < screen.height / 2) {
-                alternate(-1);
-            } else {
-                alternate(1);
-            }
-        });
+        }, { passive: false }); */
     }
 
     function updateProgress() {
@@ -442,63 +436,61 @@ function lerp(a, b, x) {
     return a + x * (b - a);
 }
 
-function reloadAll(page) {
-    if(page) {
-        const start = PATHS_PER_PAGE * (page - 1)
-        const end = PATHS_PER_PAGE * page > mosaics.length ? mosaics.length: PATHS_PER_PAGE * page
-        const newMosaics = mosaics.slice(start, end).map(path => ({src: path}))
-        const initialLength = carousel.length
-        for(let i = 0; i < initialLength; i++) {
-            carousel.remove(carousel.length - 1)
-        }
-        // poner loader
-        document.getElementById('carousel').style.display = 'none'
-        document.getElementById('loader').style.display = 'block'
-        Promise.all(newMosaics.map(loadTexture)).then(() => {
-            document.getElementById('loader').style.display = 'none'
-            targetProgress = 0
-            // quitar loader
-            const newThumbs = thumbsCarousel.slice(start, end)
-            
-            newThumbs.forEach(path => carousel.add(`<li class="splide__slide"><img src="${path}" /></li>`))
-            document.getElementById('carousel').style.display = 'block'
-            plane1.setTexture(textures.slice(0, 1)[0]);
-            plane2.setTexture(textures.slice(1 , 2)[0]);
-        }).catch(() => {
-            alert('Ocurrio un error al colocar los nuevos Mosaicos')
-            document.getElementById('carousel').style.display = 'block'
-            document.getElementById('loader').style.display = 'none'
-        })
+function getRandomMosaicThumbs() {
+    let thumbsRandom = []
+    let mosaicsRandom = []
+    const total = mosaics.length
+    for (let i = 0; i < Math.min(PATHS_PER_PAGE, total); i++) {
+        const rndIndex = Math.floor(Math.random() * mosaics.length)
+        thumbsRandom = [...thumbsRandom, thumbsCarousel[rndIndex]]
+        mosaicsRandom = [...mosaicsRandom, mosaics[rndIndex]]
+        mosaics.splice(rndIndex, 1)
+        thumbsCarousel.splice(rndIndex, 1)
     }
+    if (mosaics.length === 0) {
+        mosaics = [...totalMosaics]
+        thumbsCarousel = [...totalThumbsCarousel]
+    }
+
+    return { thumbsRandom, mosaicsRandom }
 }
-document.getElementById('loader').style.display = 'block'
-document.getElementById('carousel').style.visibility = 'hidden'
+
+function reloadAll() {
+    const { thumbsRandom, mosaicsRandom } = getRandomMosaicThumbs()
+    const initialLength = carousel.length
+
+    for (let i = 0; i < initialLength; i++) {
+        carousel.remove(carousel.length - 1)
+    }
+
+    showLoader()
+    Promise.all(mosaicsRandom.map(path => ({ src: path })).map(loadTexture)).then(() => {
+        document.getElementById('loader').style.display = 'none'
+        targetProgress = 0
+        thumbsRandom.forEach(path => carousel.add(`<li class="splide__slide"><img src="${path}" /></li>`))
+        document.getElementById('carousel').style.display = 'block'
+        plane1.setTexture(textures.slice(0, 1)[0]);
+        plane2.setTexture(textures.slice(1, 2)[0]);
+    }).catch(() => {
+        alert('Ocurrio un error al colocar los nuevos Mosaicos')
+        hideLoader()
+    })
+}
+showLoader()
 ax
     .get('paths')
     .then(response => {
-        document.getElementById('loader').style.display = 'none'
-        document.getElementById('carousel').style.visibility = 'inherit'
+        hideLoader()
         document.getElementById('loading').style.display = 'none'
         thumbsCarousel = response.data.carousels
         mosaics = response.data.mosaics
-        thumbsCarousel.slice(0, Math.min(10, thumbsCarousel.length)).forEach(path => document.addSlideToPrimary(path))
-        lastPage = Math.ceil(thumbsCarousel.length / PATHS_PER_PAGE)
-        for(let count = 0; count < Math.ceil(thumbsCarousel.length / PATHS_PER_PAGE); count++) {
-            const li = document.createElement('li')
-            const link = document.createElement('a')
-            link.href = '#'
-            link.addEventListener('click', e => {
-                e.preventDefault()
-                reloadAll(parseInt(e.currentTarget.dataset.page))
-            })
-            li.classList.add('pagination-item')
-            const page = count + 1
-            link.innerText = page
-            link.dataset.page = page
-            li.append(link)
-            document.getElementById('pagination').append(li)
-        }
-        conf.images = response.data.mosaics.slice(0, 10).map((path) => ({ src: path }))
+        totalMosaics = [...mosaics]
+        totalThumbsCarousel = [...thumbsCarousel]
+
+        const { thumbsRandom, mosaicsRandom } = getRandomMosaicThumbs()
+        thumbsRandom.forEach(path => document.addSlideToPrimary(path))
+        document.getElementById('btnSearch').addEventListener('click', reloadAll)
+        conf.images = mosaicsRandom.map((path) => ({ src: path }))
         App()
     }).catch(err => {
         alert('Error obteniendo los paths de las imagenes')

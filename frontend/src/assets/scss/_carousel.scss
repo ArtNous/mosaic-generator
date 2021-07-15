@@ -5,6 +5,7 @@ a {
 section#carousel {
     width: 600px;
     margin: auto;
+    text-align: center;
 
     &.extended{
         margin: 0;
@@ -19,22 +20,5 @@ section#carousel {
     .img {
         width : 100%;
         height: auto;
-    }
-}
-
-#pagination {
-    width: 100%;
-    text-align: center;
-
-    .pagination-item {
-        display: inline-block;
-        
-        a {
-            margin: 0 10px;
-            border-radius: 50%;
-            background-color: darkgoldenrod ;
-            color: white;
-            padding: 10px;
-        }
     }
 }

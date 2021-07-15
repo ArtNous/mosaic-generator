@@ -15,3 +15,13 @@ export default function mountCarusels() {
 
 	return slider
 }
+
+export function showLoader() {
+	document.getElementById('carousel').style.display = 'none'
+    document.getElementById('loader').style.display = 'block'
+}
+
+export function hideLoader() {
+	document.getElementById('carousel').style.display = 'block'
+	document.getElementById('loader').style.display = 'none'
+}
