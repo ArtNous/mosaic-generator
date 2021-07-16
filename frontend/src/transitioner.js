@@ -487,7 +487,6 @@ ax
     .get('paths')
     .then(response => {
         hideLoader()
-        introJs().start()
         document.getElementById('loading').style.display = 'none'
         thumbsCarousel = response.data.carousels
         mosaics = response.data.mosaics
@@ -498,6 +497,7 @@ ax
         thumbsRandom.forEach(path => document.addSlideToPrimary(path))
         document.getElementById('btnSearch').addEventListener('click', reloadAll)
         conf.images = mosaicsRandom.map((path) => ({ src: path }))
+        introJs().start()
         App()
     }).catch(err => {
         alert('Error obteniendo los paths de las imagenes')
