@@ -3,7 +3,7 @@ a {
 }
 
 section#carousel {
-    width: 600px;
+    width: 70%;
     margin: auto;
     text-align: center;
 
@@ -21,4 +21,9 @@ section#carousel {
         width : 100%;
         height: auto;
     }
+}
+
+#introduction {
+    width: 50%;
+    margin: auto;
 }

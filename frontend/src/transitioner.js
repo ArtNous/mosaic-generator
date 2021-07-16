@@ -19,10 +19,14 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import gsap from 'gsap'
 import 'loadme/dist/style/loadme.css'
 import './assets/scss/main.scss'
+import 'intro.js/introjs.css'
 import mountCarusels, { showLoader, hideLoader } from './carousel'
 import ax from './axios'
+import introJs from 'intro.js'
 
 // import AnimatedPlane from './plane.class'
+
+introJs().start()
 
 let progress = 0, targetProgress = 0;
 let thumbsCarousel, mosaics, carousel, plane1, plane2, totalMosaics, totalThumbsCarousel
@@ -37,6 +41,8 @@ const textures = [];
 let extended = false
 
 const PATHS_PER_PAGE = 10
+
+
 
 export function alternate(value) {
     targetProgress = limit(Math.floor(targetProgress) + value, 0, total - 1);
@@ -476,6 +482,7 @@ function reloadAll() {
         hideLoader()
     })
 }
+
 showLoader()
 ax
     .get('paths')
