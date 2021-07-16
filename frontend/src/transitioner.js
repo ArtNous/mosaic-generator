@@ -26,7 +26,6 @@ import introJs from 'intro.js'
 
 // import AnimatedPlane from './plane.class'
 
-introJs().start()
 
 let progress = 0, targetProgress = 0;
 let thumbsCarousel, mosaics, carousel, plane1, plane2, totalMosaics, totalThumbsCarousel
@@ -488,6 +487,7 @@ ax
     .get('paths')
     .then(response => {
         hideLoader()
+        introJs().start()
         document.getElementById('loading').style.display = 'none'
         thumbsCarousel = response.data.carousels
         mosaics = response.data.mosaics
