@@ -102,7 +102,7 @@ function App() {
 
         camera = new PerspectiveCamera(50);
         camera.position.z = 100;
-        const controls = new OrbitControls(camera, canvas);
+        const controls = new OrbitControls(camera, document.getElementById('orbit'));
         controls.target.set(0, 5, 0);
         controls.update();
 
@@ -165,14 +165,14 @@ function App() {
             mouse.y = -(e.clientY / screen.height) * 2 + 1;
         });
 
-        /* document.getElementById('mosaico').addEventListener('wheel', e => {
+        document.getElementById('mosaico').addEventListener('wheel', e => {
             e.preventDefault();
             if (e.deltaY > 0) {
                 targetProgress = limit(targetProgress + 1 / 20, 0, total - 1);
             } else {
                 targetProgress = limit(targetProgress - 1 / 20, 0, total - 1);
             }
-        }, { passive: false }); */
+        }, { passive: false });
     }
 
     function updateProgress() {
