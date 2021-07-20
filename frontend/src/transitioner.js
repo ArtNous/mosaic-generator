@@ -14,6 +14,7 @@ import {
     Vector2,
     Vector3,
     WebGLRenderer,
+    MOUSE
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import gsap from 'gsap'
@@ -40,8 +41,6 @@ const textures = [];
 let extended = false
 
 const PATHS_PER_PAGE = 10
-
-
 
 export function alternate(value) {
     targetProgress = limit(Math.floor(targetProgress) + value, 0, total - 1);
@@ -77,19 +76,9 @@ function App() {
             extended = !extended
             updateSize(!extended)
             document.getElementById('carousel').classList.toggle('extended')
+            document.getElementById('slider').style.display = extended ? 'none' : 'block'
+            document.getElementById('btnSearch').style.display = extended ? 'none' : 'inline-block'
             this.innerHTML = extended ? 'Reducir' : 'Ampliar'
-        })
-    }
-
-    if (document.getElementById('btnZoomin')) {
-        document.getElementById('btnZoomin').addEventListener('click', function () {
-            camera.zoom += 1
-        })
-    }
-
-    if (document.getElementById('btnZoomout')) {
-        document.getElementById('btnZoomout').addEventListener('click', function () {
-            camera.zoom -= 50
         })
     }
 
@@ -97,12 +86,43 @@ function App() {
 
     function init() {
         const canvas = document.getElementById('mosaico')
+        const zoomFactor = 0.2
+        
         renderer = new WebGLRenderer({ canvas });
         renderer.setSize(window.innerWidth / 2, window.innerHeight / 2)
 
         camera = new PerspectiveCamera(50);
         camera.position.z = 100;
-        const controls = new OrbitControls(camera, document.getElementById('orbit'));
+
+        if (document.getElementById('btnZoomIn')) {
+            document.getElementById('btnZoomIn').addEventListener('click', function () {
+                camera.zoom += zoomFactor
+                camera.updateProjectionMatrix()
+            })
+        }
+
+        if (document.getElementById('btnReset')) {
+            document.getElementById('btnReset').addEventListener('click', function () {
+                camera.zoom = 1
+                camera.updateProjectionMatrix()
+            })
+        }
+    
+        if (document.getElementById('btnZoomOut')) {
+            document.getElementById('btnZoomOut').addEventListener('click', function () {
+                camera.zoom -= zoomFactor
+                camera.updateProjectionMatrix()
+            })
+        }
+        
+        const controls = new OrbitControls(camera, canvas);        
+        
+        controls.enableZoom = false
+        controls.mouseButtons = {
+            LEFT: MOUSE.ROTATE,
+            RIGHT: MOUSE.PAN,
+            MIDDLE: MOUSE.DOLLY
+        }
         controls.target.set(0, 5, 0);
         controls.update();
 
