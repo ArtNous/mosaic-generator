@@ -163,7 +163,40 @@ function App() {
             carousel.on('pagination:updated', (data, prev, active) => {
                 if (active) targetProgress = active.page
             })
-            introJs().start()
+            introJs().setOptions({
+                steps: [
+                    {
+                        title: 'Mosaico',
+                        intro: 'Aqui veras y podras interactuar con el mosaico. Haz scroll para navegar entre mosaicos.<img src="/wheel.jpeg" />',
+                        element: document.getElementById('mosaico')
+                    },
+                    {
+                        title: 'Galeria',
+                        intro: 'Aqui puedes navegar entre los distintos mosaicos',
+                        element: document.getElementById('slider-wrapper')
+                    },
+                    {
+                        title: 'Descubre',
+                        intro: 'Pulsa para descubrir nuevos mosaicos',
+                        element: document.getElementById('btnSearch')
+                    },
+                    {
+                        title: 'Pantalla Completa',
+                        intro: 'Pulsa para agrandar la pantalla.',
+                        element: document.getElementById('btnExtend')
+                    },
+                    {
+                        title: 'Acercar',
+                        intro: 'Pulsa para acercar',
+                        element: document.getElementById('btnZoomIn')
+                    },
+                    {
+                        title: 'Alejar',
+                        intro: 'Pulsa para alejar',
+                        element: document.getElementById('btnZoomOut')
+                    },
+                ]
+            }).start()
 
             gsap.fromTo(plane1.uProgress,
                 {
