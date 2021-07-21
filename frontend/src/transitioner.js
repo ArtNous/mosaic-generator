@@ -73,7 +73,7 @@ function App() {
 
     if (document.getElementById('btnExtend')) {
         document.getElementById('btnExtend').addEventListener('click', function () {
-        
+            extended = !extended
             document.getElementById('carousel').classList.toggle('extended')
             // document.getElementById('carousel').classList.toggle('carousel')
             document.getElementById('minimize-icon').style.display = !extended ? 'none' : 'inline-block'
@@ -87,36 +87,61 @@ function App() {
     function init() {
         canvas = document.getElementById('mosaico')
         const zoomFactor = 0.2
-        
+
         renderer = new WebGLRenderer({ canvas });
         renderer.setSize(canvas.clientWidth, canvas.clientHeight)
 
         camera = new PerspectiveCamera(50);
         camera.position.z = 100;
-        
+
+        const availableZoom = {
+            max: 3,
+            min: 0.7
+        }
+        function compareZoom() {
+            document.getElementById('btnResetZoom').style.display = camera.zoom !== 1 ? 'inline-block' : 'none'
+            if (camera.zoom >= availableZoom.max) {
+                document.getElementById('btnZoomIn').classList.add('max')
+            } else {
+                document.getElementById('btnZoomIn').classList.remove('max')
+            }
+
+            if (camera.zoom <= availableZoom.min) {
+                document.getElementById('btnZoomOut').classList.add('max')
+            } else {
+                document.getElementById('btnZoomOut').classList.remove('max')
+            }
+        }
+        compareZoom()
+
         if (document.getElementById('btnZoomIn')) {
             document.getElementById('btnZoomIn').addEventListener('click', function () {
-                camera.zoom += 0.1
-                camera.updateProjectionMatrix()
+                if(camera.zoom < availableZoom.max) {
+                    camera.zoom += 0.1
+                    camera.updateProjectionMatrix()
+                    compareZoom()
+                }
             })
         }
         if (document.getElementById('btnResetZoom')) {
             document.getElementById('btnResetZoom').addEventListener('click', function () {
                 camera.zoom = 1
                 camera.updateProjectionMatrix()
+                compareZoom()
             })
         }
         if (document.getElementById('btnZoomOut')) {
             document.getElementById('btnZoomOut').addEventListener('click', function () {
-                if (camera.zoom > .7) {
+                if (camera.zoom > availableZoom.min) {
                     camera.zoom -= 0.1
-                    camera.updateProjectionMatrix()    
+                    camera.updateProjectionMatrix()
+                    compareZoom()
                 }
             })
         }
-        
-        const controls = new OrbitControls(camera, canvas);        
-        
+
+        const controls = new OrbitControls(camera, canvas);
+
         controls.enableZoom = false
         controls.mouseButtons = {
             LEFT: MOUSE.ROTATE,
@@ -126,10 +151,10 @@ function App() {
         controls.target.set(0, 5, 0);
         controls.update();
 
-        updateSize(extended);
         window.addEventListener('resize', onResize);
         Promise.all(conf.images.map(loadTexture)).then(responses => {
-
+            hideLoader()
+            updateSize(extended);
             initScene()
             initListeners()
             carousel = mountCarusels()
@@ -138,6 +163,7 @@ function App() {
             carousel.on('pagination:updated', (data, prev, active) => {
                 if (active) targetProgress = active.page
             })
+            introJs().start()
 
             gsap.fromTo(plane1.uProgress,
                 {
@@ -503,7 +529,8 @@ function reloadAll() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('wrapper').style.display = 'block'
+    // document.getElementById('wrapper').style.display = 'block'
+    showLoader()
     ax
     .get('paths')
     .then(response => {
@@ -516,8 +543,8 @@ document.addEventListener('DOMContentLoaded', () => {
         thumbsRandom.forEach(path => document.addSlideToPrimary(path))
         document.getElementById('btnSearch').addEventListener('click', reloadAll)
         conf.images = mosaicsRandom.map((path) => ({ src: path }))
-        hideLoader()
-        introJs().start()
+        // hideLoader()
+
         App()
     }).catch(err => {
         hideLoader()

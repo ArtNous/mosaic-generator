@@ -8,6 +8,7 @@ body{
     width: 100vw;
     height: 100vh;
     display: flex;
+    align-items: center;
     flex-direction: column;
     overflow: hidden;
     /* align-items: center; */
@@ -41,4 +42,8 @@ button {
 
 header {
     padding: 20px 0;
+}
+
+#wrapper {
+
 }
