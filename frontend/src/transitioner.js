@@ -502,12 +502,11 @@ function reloadAll() {
     })
 }
 
-showLoader()
-ax
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('wrapper').style.display = 'block'
+    ax
     .get('paths')
     .then(response => {
-        hideLoader()
-        document.getElementById('loading').style.display = 'none'
         thumbsCarousel = response.data.carousels
         mosaics = response.data.mosaics
         totalMosaics = [...mosaics]
@@ -517,14 +516,14 @@ ax
         thumbsRandom.forEach(path => document.addSlideToPrimary(path))
         document.getElementById('btnSearch').addEventListener('click', reloadAll)
         conf.images = mosaicsRandom.map((path) => ({ src: path }))
+        hideLoader()
         introJs().start()
         App()
     }).catch(err => {
         hideLoader()
         alert('Error obteniendo los paths de las imagenes')
-        document.getElementById('loader').style.display = 'none'
-        document.getElementById('loading').style.display = 'none'
     })
+})
 
 if (document.getElementById('btnGenerate')) {
     document.getElementById('btnGenerate').addEventListener('click', e => {

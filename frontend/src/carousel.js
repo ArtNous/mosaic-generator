@@ -28,11 +28,11 @@ export default function mountCarusels() {
 }
 
 export function showLoader() {
-	document.getElementById('carousel').classList.add('loading')
 	document.getElementById('loader').style.display = 'block'
+	document.getElementById('wrapper').style.display = 'none'
 }
 
 export function hideLoader() {
-	document.getElementById('carousel').classList.remove('loading')
+	document.getElementById('wrapper').style.display = 'block'
 	document.getElementById('loader').style.display = 'none'
 }

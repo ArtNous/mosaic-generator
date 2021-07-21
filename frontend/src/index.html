@@ -11,36 +11,37 @@
 </head>
 
 <body>
-    <p id="loading">Cargando texturas...</p>
     <div id="loader" class="loadme-circular"></div>    
-    <section id="carousel" class="carousel">
-        <div id="scene">
-            <canvas data-title="Mosaico" data-intro="Aqui veras y podras interactuar con el mosaico" id="mosaico"></canvas>
-            <div class="buttons">
-                <button data-title="Agranda el mosaico" data-intro="Si quieres agrandar la pantalla, pulsa aqui" id="btnExtend" class="btnNoStyles  ">
-                    <svg id="maximize-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m256 0c-140.96875 0-256 115.050781-256 256 0 140.96875 115.050781 256 256 256 140.96875 0 256-115.050781 256-256 0-140.96875-115.050781-256-256-256zm0 482c-124.617188 0-226-101.382812-226-226s101.382812-226 226-226 226 101.382812 226 226-101.382812 226-226 226zm0 0"/><path d="m301 151h60v60h30v-90h-90zm0 0"/><path d="m361 361h-60v30h90v-90h-30zm0 0"/><path d="m151 301h-30v90h90v-30h-60zm0 0"/><path d="m121 211h30v-60h60v-30h-90zm0 0"/></svg>
-                    <svg id="minimize-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m256 512c-140.609375 0-256-115.390625-256-256s115.390625-256 256-256 256 115.390625 256 256-115.390625 256-256 256zm0 0" fill="#deecf1"/><path d="m512 256c0-140.609375-115.390625-256-256-256v512c140.609375 0 256-115.390625 256-256zm0 0" fill="#c6e2e7"/><path d="m121 331h60v60h30v-90h-90zm0 0" fill="#384949"/><path d="m181 181h-60v30h90v-90h-30zm0 0" fill="#384949"/><g fill="#293939"><path d="m331 121h-30v90h90v-30h-60zm0 0"/><path d="m301 391h30v-60h60v-30h-90zm0 0"/></g></svg>
-                </button>
-                <div class="div-zoom">
-                    <button class="btnNoStyles" data-title="Zoom" data-intro="Pulsa aqui para hacer zoom" id="btnZoomIn"><svg xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M15.853 16.56c-1.683 1.517-3.911 2.44-6.353 2.44-5.243 0-9.5-4.257-9.5-9.5s4.257-9.5 9.5-9.5 9.5 4.257 9.5 9.5c0 2.442-.923 4.67-2.44 6.353l7.44 7.44-.707.707-7.44-7.44zm-6.353-15.56c4.691 0 8.5 3.809 8.5 8.5s-3.809 8.5-8.5 8.5-8.5-3.809-8.5-8.5 3.809-8.5 8.5-8.5zm-4.5 8h4v-4h1v4h4v1h-4v4h-1v-4h-4v-1z"/></svg></button>
-                    <button class="btnNoStyles" data-title="Zoom" data-intro="Pulsa aqui para hacer zoom" id="btnZoomOut"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 10h-8v-2h8v2zm8.172 14l-7.387-7.387c-1.388.874-3.024 1.387-4.785 1.387-4.971 0-9-4.029-9-9s4.029-9 9-9 9 4.029 9 9c0 1.761-.514 3.398-1.387 4.785l7.387 7.387-2.828 2.828zm-12.172-8c3.859 0 7-3.14 7-7s-3.141-7-7-7-7 3.14-7 7 3.141 7 7 7z"/></svg></button>
-                </div>
-                <button class="btnNoStyles" data-title="Zoom" data-intro="Pulsa aqui para hacer zoom" id="btnResetZoom"><svg id="reset-zoom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"  fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                    <circle cx="14" cy="14" r="12" />
-                    <path d="M23 23 L30 30" />
-                    <path d="M9 12 L9 9 12 9 M16 9 L19 9 19 12 M9 16 L9 19 12 19 M19 16 L19 19 16 19" />
-                </svg></button>
-            </div>
-        </div>
-        <div id="slider-wrapper">
-            <div data-title="Galeria" data-intro="Aqui puedes ver todos los mosaicos disponibles" id="slider" class="splide">
-                <div class="splide__track">
-                    <ul class="splide__list"></ul>
+    <div id="wrapper" style="display: none">
+        <section id="carousel" class="carousel loading">
+            <div id="scene">
+                <canvas data-title="Mosaico" data-intro="Aqui veras y podras interactuar con el mosaico" id="mosaico"></canvas>
+                <div class="buttons">
+                    <button data-title="Agranda el mosaico" data-intro="Si quieres agrandar la pantalla, pulsa aqui" id="btnExtend" class="btnNoStyles  ">
+                        <svg id="maximize-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m256 0c-140.96875 0-256 115.050781-256 256 0 140.96875 115.050781 256 256 256 140.96875 0 256-115.050781 256-256 0-140.96875-115.050781-256-256-256zm0 482c-124.617188 0-226-101.382812-226-226s101.382812-226 226-226 226 101.382812 226 226-101.382812 226-226 226zm0 0"/><path d="m301 151h60v60h30v-90h-90zm0 0"/><path d="m361 361h-60v30h90v-90h-30zm0 0"/><path d="m151 301h-30v90h90v-30h-60zm0 0"/><path d="m121 211h30v-60h60v-30h-90zm0 0"/></svg>
+                        <svg id="minimize-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m256 512c-140.609375 0-256-115.390625-256-256s115.390625-256 256-256 256 115.390625 256 256-115.390625 256-256 256zm0 0" fill="#deecf1"/><path d="m512 256c0-140.609375-115.390625-256-256-256v512c140.609375 0 256-115.390625 256-256zm0 0" fill="#c6e2e7"/><path d="m121 331h60v60h30v-90h-90zm0 0" fill="#384949"/><path d="m181 181h-60v30h90v-90h-30zm0 0" fill="#384949"/><g fill="#293939"><path d="m331 121h-30v90h90v-30h-60zm0 0"/><path d="m301 391h30v-60h60v-30h-90zm0 0"/></g></svg>
+                    </button>
+                    <div class="div-zoom">
+                        <button class="btnNoStyles" data-title="Zoom" data-intro="Pulsa aqui para hacer zoom" id="btnZoomIn"><svg xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M15.853 16.56c-1.683 1.517-3.911 2.44-6.353 2.44-5.243 0-9.5-4.257-9.5-9.5s4.257-9.5 9.5-9.5 9.5 4.257 9.5 9.5c0 2.442-.923 4.67-2.44 6.353l7.44 7.44-.707.707-7.44-7.44zm-6.353-15.56c4.691 0 8.5 3.809 8.5 8.5s-3.809 8.5-8.5 8.5-8.5-3.809-8.5-8.5 3.809-8.5 8.5-8.5zm-4.5 8h4v-4h1v4h4v1h-4v4h-1v-4h-4v-1z"/></svg></button>
+                        <button class="btnNoStyles" data-title="Zoom" data-intro="Pulsa aqui para hacer zoom" id="btnZoomOut"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 10h-8v-2h8v2zm8.172 14l-7.387-7.387c-1.388.874-3.024 1.387-4.785 1.387-4.971 0-9-4.029-9-9s4.029-9 9-9 9 4.029 9 9c0 1.761-.514 3.398-1.387 4.785l7.387 7.387-2.828 2.828zm-12.172-8c3.859 0 7-3.14 7-7s-3.141-7-7-7-7 3.14-7 7 3.141 7 7 7z"/></svg></button>
+                    </div>
+                    <button class="btnNoStyles" data-title="Zoom" data-intro="Pulsa aqui para hacer zoom" id="btnResetZoom"><svg id="reset-zoom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"  fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                        <circle cx="14" cy="14" r="12" />
+                        <path d="M23 23 L30 30" />
+                        <path d="M9 12 L9 9 12 9 M16 9 L19 9 19 12 M9 16 L9 19 12 19 M19 16 L19 19 16 19" />
+                    </svg></button>
                 </div>
             </div>
-            <button data-title="Busca" data-intro="Pulsa aqui para conseguir la imagen que buscas" id="btnSearch">Descubre más imagenes</button>
-        </div>
-    </section>
+            <div id="slider-wrapper">
+                <div data-title="Galeria" data-intro="Aqui puedes ver todos los mosaicos disponibles" id="slider" class="splide">
+                    <div class="splide__track">
+                        <ul class="splide__list"></ul>
+                    </div>
+                </div>
+                <button data-title="Busca" data-intro="Pulsa aqui para conseguir la imagen que buscas" id="btnSearch">Descubre más imagenes</button>
+            </div>
+        </section>
+    </div>
 </body>
 
 </html>
