@@ -27,8 +27,7 @@ import introJs from 'intro.js'
 
 // import AnimatedPlane from './plane.class'
 
-
-let progress = 0, targetProgress = 0;
+let progress = 0, targetProgress = 0, canvas;
 let thumbsCarousel, mosaics, carousel, plane1, plane2, totalMosaics, totalThumbsCarousel
 
 const conf = {
@@ -70,48 +69,49 @@ function App() {
     let planes
 
     const mouse = new Vector2();
+    document.getElementById('minimize-icon').style.display = 'none'
 
     if (document.getElementById('btnExtend')) {
         document.getElementById('btnExtend').addEventListener('click', function () {
-            extended = !extended
-            updateSize(!extended)
+        
             document.getElementById('carousel').classList.toggle('extended')
-            document.getElementById('slider').style.display = extended ? 'none' : 'block'
-            document.getElementById('btnSearch').style.display = extended ? 'none' : 'inline-block'
-            this.innerHTML = extended ? 'Reducir' : 'Ampliar'
+            // document.getElementById('carousel').classList.toggle('carousel')
+            document.getElementById('minimize-icon').style.display = !extended ? 'none' : 'inline-block'
+            document.getElementById('maximize-icon').style.display = extended ? 'none' : 'inline-block'
+            updateSize()
         })
     }
 
     init();
 
     function init() {
-        const canvas = document.getElementById('mosaico')
+        canvas = document.getElementById('mosaico')
         const zoomFactor = 0.2
         
         renderer = new WebGLRenderer({ canvas });
-        renderer.setSize(window.innerWidth / 2, window.innerHeight / 2)
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight)
 
         camera = new PerspectiveCamera(50);
         camera.position.z = 100;
-
+        
         if (document.getElementById('btnZoomIn')) {
             document.getElementById('btnZoomIn').addEventListener('click', function () {
-                camera.zoom += zoomFactor
+                camera.zoom += 0.1
                 camera.updateProjectionMatrix()
             })
         }
-
-        if (document.getElementById('btnReset')) {
-            document.getElementById('btnReset').addEventListener('click', function () {
+        if (document.getElementById('btnResetZoom')) {
+            document.getElementById('btnResetZoom').addEventListener('click', function () {
                 camera.zoom = 1
                 camera.updateProjectionMatrix()
             })
         }
-    
         if (document.getElementById('btnZoomOut')) {
             document.getElementById('btnZoomOut').addEventListener('click', function () {
-                camera.zoom -= zoomFactor
-                camera.updateProjectionMatrix()
+                if (camera.zoom > .7) {
+                    camera.zoom -= 0.1
+                    camera.updateProjectionMatrix()    
+                }
             })
         }
         
@@ -126,7 +126,7 @@ function App() {
         controls.target.set(0, 5, 0);
         controls.update();
 
-        updateSize(true);
+        updateSize(extended);
         window.addEventListener('resize', onResize);
         Promise.all(conf.images.map(loadTexture)).then(responses => {
 
@@ -241,12 +241,12 @@ function App() {
         resizeTimeout = setTimeout(updateSize, 200);
     }
 
-    function updateSize(init = false) {
-        screen.width = window.innerWidth;
-        screen.height = window.innerHeight;
+    function updateSize() {
+        screen.width = canvas.parentNode.clientWidth
+        screen.height = canvas.parentNode.clientHeight
         screen.ratio = screen.width / screen.height;
         if (renderer && camera) {
-            renderer.setSize(init ? screen.width / 2 : screen.width, init ? screen.height / 2 : screen.height);
+            renderer.setSize(screen.width,screen.height);
             camera.aspect = screen.ratio;
             camera.updateProjectionMatrix();
             const wsize = getRendererSize();
@@ -493,9 +493,9 @@ function reloadAll() {
         document.getElementById('loader').style.display = 'none'
         targetProgress = 0
         thumbsRandom.forEach(path => carousel.add(`<li class="splide__slide"><img src="${path}" /></li>`))
-        document.getElementById('carousel').style.display = 'block'
         plane1.setTexture(textures.slice(0, 1)[0]);
         plane2.setTexture(textures.slice(1, 2)[0]);
+        hideLoader()
     }).catch(() => {
         alert('Ocurrio un error al colocar los nuevos Mosaicos')
         hideLoader()

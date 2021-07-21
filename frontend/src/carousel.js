@@ -14,9 +14,9 @@ import Splide from '@splidejs/splide';
 export default function mountCarusels() {
 	document.getElementsByClassName('splide__slide').showUp()
 	const slider = new Splide('#slider', {
-		type: 'slide',
+		type: 'loop',
 		pagination: true,
-		perPage: 5,
+		fixedWidth: '96px',
 		arrows: true,
 		focus: 'center',
 		isNavigation: true,
@@ -28,11 +28,11 @@ export default function mountCarusels() {
 }
 
 export function showLoader() {
-	document.getElementById('carousel').style.display = 'none'
+	document.getElementById('carousel').classList.add('loading')
 	document.getElementById('loader').style.display = 'block'
 }
 
 export function hideLoader() {
-	document.getElementById('carousel').style.display = 'block'
+	document.getElementById('carousel').classList.remove('loading')
 	document.getElementById('loader').style.display = 'none'
 }

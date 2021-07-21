@@ -18,7 +18,7 @@ module.exports = merge(
         {
             host: '0.0.0.0',
             port: portFinderSync.getPort(process.env.PORT),
-            contentBase: './dist',
+            contentBase: path.join(__dirname, '../static'),
             watchContentBase: true,
             open: true,
             https: false,
