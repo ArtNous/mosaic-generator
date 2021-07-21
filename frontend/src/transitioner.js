@@ -520,6 +520,7 @@ ax
         introJs().start()
         App()
     }).catch(err => {
+        hideLoader()
         alert('Error obteniendo los paths de las imagenes')
         document.getElementById('loader').style.display = 'none'
         document.getElementById('loading').style.display = 'none'
