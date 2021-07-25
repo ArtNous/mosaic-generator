@@ -33,10 +33,13 @@ export default function mountCarusels() {
 
 export function showLoader() {
 	document.getElementById('loader').style.display = 'block'
-	document.getElementById('wrapper').style.display = 'none'
+	document.getElementsByClassName('buttons')[0].style.display = 'none'
 }
 
 export function hideLoader() {
 	document.getElementById('wrapper').style.display = 'block'
+	document.getElementsByClassName('buttons')[0].style.display = 'flex'
+	document.getElementById('btnSearch').style.display = 'inline-block'
+	document.getElementsByTagName('header')[0].style.display = 'flex'
 	document.getElementById('loader').style.display = 'none'
 }
