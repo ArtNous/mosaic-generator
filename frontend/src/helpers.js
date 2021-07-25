@@ -1,6 +1,7 @@
 (function() {
     Document.prototype.addSlideToPrimary = function(img) {
         const slide = this.createElement('li')
+        
         slide.style.display = 'none'
         const imgElem = this.createElement('img')
         imgElem.src = img

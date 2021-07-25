@@ -1,3 +1,4 @@
+@import 'variables';
 @import 'carousel';
 @import 'scene';
 @import 'loader';
@@ -8,9 +9,11 @@ body{
     width: 100vw;
     height: 100vh;
     display: flex;
-    align-items: center;
+    justify-content: center;
     flex-direction: column;
     overflow: hidden;
+    background-color: $secondary_color;
+    position: relative;
     /* align-items: center; */
 }
 
@@ -18,14 +21,21 @@ body#settings {
     padding: 1em;
 }
 
-.splide {
-    visibility: visible !important;
-}
+header {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    justify-content: space-between;
 
-button {
-    padding: 10px;
-    border-radius: 1em;
-    margin: 0 10px;
+    a {
+        color: white;
+        border-bottom: 1px solid white;
+        padding-bottom: 7px;
+        align-self: center;
+        margin-right: 1em;
+        font-size: 1.15em;
+        font-weight: bold;
+    }
 }
 
 .text-center {
@@ -44,6 +54,46 @@ header {
     padding: 20px 0;
 }
 
-#wrapper {
+.tooltipme {
+    min-width: 300px !important;
+    font-weight: bold;
+    border-radius: 0.8em !important;
+    box-shadow: 5px 5px 10px #888 !important;
+    overflow: hidden;
 
+    .introjs-tooltiptext,
+    .introjs-tooltip-header {
+        background-color: $main_color;
+        color: white;
+    }
+
+    .introjs-skipbutton {
+        color: white;
+    }
+
+    .introjs-bullets {
+        background-color: transparent;
+        position: absolute;
+        bottom: 0.5em;
+        left: 50%;
+        transform: translateX(-50%);
+        
+    }
+
+    .introjs-tooltipbuttons {
+        background-color: $secondary_color;
+        
+        a {
+            color: white;
+            text-shadow: none;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            font-size: 0.75em;
+        }
+    }
+
+    h1 {
+        margin: auto;
+    }
 }

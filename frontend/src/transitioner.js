@@ -75,6 +75,8 @@ function App() {
         document.getElementById('btnExtend').addEventListener('click', function () {
             extended = !extended
             document.getElementById('carousel').classList.toggle('extended')
+            document.getElementById('btnSearch').classList.toggle('extended')
+            document.getElementsByClassName('buttons')[0].classList.toggle('extended')
             // document.getElementById('carousel').classList.toggle('carousel')
             document.getElementById('minimize-icon').style.display = !extended ? 'none' : 'inline-block'
             document.getElementById('maximize-icon').style.display = extended ? 'none' : 'inline-block'
@@ -86,7 +88,6 @@ function App() {
 
     function init() {
         canvas = document.getElementById('mosaico')
-        const zoomFactor = 0.2
 
         renderer = new WebGLRenderer({ canvas });
         renderer.setSize(canvas.clientWidth, canvas.clientHeight)
@@ -152,7 +153,7 @@ function App() {
         controls.update();
 
         window.addEventListener('resize', onResize);
-        Promise.all(conf.images.map(loadTexture)).then(responses => {
+        Promise.all(conf.images.map(loadTexture)).then(() => {
             hideLoader()
             updateSize(extended);
             initScene()
@@ -160,10 +161,12 @@ function App() {
             carousel = mountCarusels()
             // carousel.on('move', (newIndex, oldIndex) => targetProgress += newIndex - oldIndex)
             carousel.on('click', (slide) => carousel.go(slide.index))
-            carousel.on('pagination:updated', (data, prev, active) => {
-                if (active) targetProgress = active.page
-            })
+            carousel.on('move', newIndex => targetProgress = newIndex)
             introJs().setOptions({
+                tooltipClass: 'tooltipme',
+                nextLabel: 'SIGUIENTE',
+                prevLabel: 'ANTERIOR',
+                doneLabel: 'TERMINAR',
                 steps: [
                     {
                         title: 'Mosaico',
@@ -356,7 +359,7 @@ class AnimatedPlane {
             map: this.texture,
             onBeforeCompile: shader => {
                 shader.uniforms.progress = this.uProgress;
-                shader.uniforms.uvScale = { value: this.uvScale };
+                shader.uniforms.uvScale = { value: this.uvScale};
                 shader.vertexShader = `
             uniform float progress;
             uniform vec2 uvScale;
@@ -391,15 +394,15 @@ class AnimatedPlane {
             mat3 rotMat = rotationMatrixXYZ(progress * rotation);
             transformed = rotMat * transformed;
 
-            vec4 mvPosition = vec4(transformed, 1.0);
+            vec4 mvPosition = vec4(transformed, 1);
             #ifdef USE_INSTANCING
               mvPosition = instanceMatrix * mvPosition;
             #endif
 
             mvPosition.xyz += progress * offset;
 
-            mvPosition = modelViewMatrix * mvPosition;
-            gl_Position = projectionMatrix * mvPosition;
+            mvPosition = modelViewMatrix * mvPosition ;
+            gl_Position = projectionMatrix * mvPosition ;
           `);
             }
         });
@@ -407,7 +410,7 @@ class AnimatedPlane {
 
     initPlane() {
         const { width, wWidth, wHeight } = this.screen;
-        this.wSize = this.size * wWidth / width;
+        this.wSize = this.size * wWidth / width ;
         this.nx = Math.ceil(wWidth / this.wSize) + 1;
         this.ny = Math.ceil(wHeight / this.wSize) + 1;
         this.icount = this.nx * this.ny;
@@ -584,6 +587,10 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Error obteniendo los paths de las imagenes')
     })
 })
+
+const verticalText = 'NUEVO MOSAICO'.split("").join("<br/>")
+
+document.getElementById('btnSearch').innerHTML = verticalText
 
 if (document.getElementById('btnGenerate')) {
     document.getElementById('btnGenerate').addEventListener('click', e => {

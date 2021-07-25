@@ -1,3 +1,43 @@
+.buttons {
+    position: absolute;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    top: 15vh;
+
+    &.extended {
+        top: 0;
+    }
+
+    button {
+        border: 1px solid white;
+
+        &:hover {
+            border: 1px solid $main_color;
+            cursor: pointer;
+
+            svg {
+                fill: $main_color;
+            }
+        }
+    }
+
+    .btnNoStyles {
+        background-color: transparent;
+        color: white;
+        outline: none;
+        border: solid 1px white;
+
+        &.max { opacity: 0.3; }
+
+        svg {
+            fill: white;
+            width: 35px;
+            height: 35px;
+        }
+    }
+}
+
 #scene {
     position: relative;
     width: 100%;
@@ -6,41 +46,11 @@
     canvas{   
         width: 100%;
         height: 100%;
-        box-shadow: 10px 10px 10px grey;
         margin: auto;
         background-color: darkslategrey;
     }
-
-    .buttons {
-        position: absolute;
-        right: 0%;
-        display: flex;
-        flex-direction: column;
-        top: 0%;
-
-        .btnNoStyles {
-            background-color: transparent;
-            color: white;
-            outline: none;
-            border: solid 0px;
-
-            &.max { opacity: 0.3; }
-
-            svg {
-                fill: white;
-                width: 35px;
-                height: 35px;
-            }
-        }
-
-        .div-zoom{
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-        }
-    }
-
 }
+
 #orbit {
     background-image: url('../images/orbita.png');
     background-position: center center;
@@ -49,3 +59,11 @@
     height: 100px;
     margin: auto;
 }
+
+.splide__slide {
+    border: 0px !important;
+
+    &.is-active {
+        border: 4px solid $main_color !important;
+    }
+} 

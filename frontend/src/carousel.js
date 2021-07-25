@@ -4,9 +4,9 @@ import Splide from '@splidejs/splide';
 	document.addEventListener('DOMContentLoaded', function () {
 		new Splide('#introduction', {
 			autoplay: true,
-			perPage: 3,
+			// perPage: 3,
 			isNavigation: false,
-			arrows: false
+			arrows: false,
 		}).mount();
 	});
 })()
@@ -15,11 +15,15 @@ export default function mountCarusels() {
 	document.getElementsByClassName('splide__slide').showUp()
 	const slider = new Splide('#slider', {
 		type: 'loop',
-		pagination: true,
-		fixedWidth: '96px',
+		pagination: false,
+		fixedWidth: '120px',
+		fixedHeight: '120px',
+		heightRatio: 1,
 		arrows: true,
 		focus: 'center',
+		cover: true,
 		isNavigation: true,
+		padding: 0,
 	})
 
 	slider.mount()

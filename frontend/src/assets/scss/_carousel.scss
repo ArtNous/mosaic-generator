@@ -4,9 +4,9 @@ a {
 
 #carousel {
     margin: auto;
-    width: 50vw;
-    height: 50vh;
-    display: block;
+    width: 70vw;
+    height: 70vh;
+    display: block;    
 
     &.extended{
         width: 100vw;
@@ -14,28 +14,64 @@ a {
         display: flex;
         flex-direction: column;
 
+        .buttons {
+            top: 0;
+        }
+
         .scene {
             flex: 1;
         }
     }
-    /* display: flex;
-    flex-direction: column;
-    align-content: flex-end; */
 }
+
+#btnSearch {
+    position: absolute;
+    right: 0;
+    bottom: 15vh;
+    background-color: transparent;
+    border: 1px solid $main_color;
+    padding: 20px;
+    color: white;
+    font-weight: 700;
+
+    &:hover {
+        background-color: $main_color;
+        border: 0 solid yellow;
+    }
+
+    &.extended {
+        bottom: 0;
+    }
+}
+
 #slider-wrapper {
     display: flex;
     flex-direction: column;
-    min-height: 150px;
-    padding: 15px 0;
-    width: 100%;
-    
-
-    #btnSearch {
-        align-self: center;
-    }
-    
+    width: 40%;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 15vh;
+    justify-content: flex-end;
     #slider {
-        flex: 2;
+        .splide__arrows {
+
+            svg {
+                width: 3em;
+                height: 3em;
+            }
+
+            .splide__arrow--prev {
+                left: -4em;
+                background-color: transparent;
+            }
+
+            .splide__arrow--next {
+                right: -4em;
+                background-color: transparent;
+            }
+        }
     }
 }
 
