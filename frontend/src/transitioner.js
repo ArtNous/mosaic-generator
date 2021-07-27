@@ -72,26 +72,6 @@ function App() {
     const mouse = new Vector2();
     document.getElementById('minimize-icon').style.display = 'none'
 
-    /* for (const node of document.getElementsByClassName('hover-image')) {
-        node.addEventListener('mouseenter', function() {
-            const images = this.childNodes
-            for(const image of images) {
-                const currentImage = image.src
-                image.src = image.dataset.hoverImage
-                image.dataset.hoverImage = currentImage
-            }
-        })
-
-        node.addEventListener('mouseleave', function() {
-            const images = this.childNodes
-            for(const image of images) {
-                const currentImage = image.src
-                image.src = image.dataset.hoverImage
-                image.dataset.hoverImage = currentImage
-            }
-        })
-    } */
-
     if (document.getElementById('btnExtend')) {
         document.getElementById('btnExtend').addEventListener('click', function () {
             extended = !extended
@@ -134,6 +114,8 @@ function App() {
                 document.getElementById('btnZoomOut').classList.remove('max')
             }
         }
+        camera.zoom = 0.8
+        camera.updateProjectionMatrix()
         compareZoom()
 
         if (document.getElementById('btnZoomIn')) {
