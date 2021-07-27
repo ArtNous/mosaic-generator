@@ -4,8 +4,8 @@ a {
 
 #carousel {
     margin: auto;
-    width: 70vw;
-    height: 70vh;
+    width: 60vw;
+    height: 60vh;
     display: block;    
 
     &.extended{
@@ -27,16 +27,18 @@ a {
 #btnSearch {
     position: absolute;
     right: 0;
-    bottom: 15vh;
+    bottom: 20vh;
     background-color: transparent;
-    border: 1px solid $main_color;
-    padding: 20px;
+    border: 2px solid $main_color;
+    padding: 25px 15px;
     color: white;
-    font-weight: 700;
+    font-size: 0.95em;
+    font-family: 'Membrana Estudio Regular';
+    font-weight: 500;
+    font-stretch: expanded;
 
     &:hover {
         background-color: $main_color;
-        border: 0 solid yellow;
     }
 
     &.extended {
@@ -54,21 +56,17 @@ a {
     transform: translateX(-50%);
     height: 15vh;
     justify-content: flex-end;
+
     #slider {
         .splide__arrows {
 
-            svg {
-                width: 3em;
-                height: 3em;
-            }
-
             .splide__arrow--prev {
-                left: -4em;
+                left: -5em;
                 background-color: transparent;
             }
 
             .splide__arrow--next {
-                right: -4em;
+                right: -5em;
                 background-color: transparent;
             }
         }

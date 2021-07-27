@@ -12,34 +12,39 @@
 
 <body>
     <header class="flex" style="display: none;">
-        <img src="" />
-        <a href="javascript:void" id="header-link">VOLVER AL MOSAICO</a>
+        <img src="/logo_mustakis.png" width="230" />
+        <a href="https://www.fundacionmustakis.org/" target="_blank" id="header-link">VOLVER A LA FUNDACION</a>
     </header>
-    <div id="loader" class="loadme-circular"></div>
+    <div>
+        <div id="loader" class="loadme-circular"></div>
+        <div id="logo" class="text-center"><a href="#" id="logo-link" rel="noopener noreferrer"><img src="/logo_mustakis.png" /></a></div>
+    </div>
     <div id="wrapper" style="display: none">
         <section id="carousel" class="carousel loading">
-            <div id="scene">
-                <canvas data-title="Mosaico" data-intro="Aqui veras y podras interactuar con el mosaico"
+            <div id="scene" data-position='{"arx": "left","ary": "top-inner","ard": "-90","y": "bottom", "x": "left-inner"}' class="tour">
+                <canvas class="relative" data-title="Mosaico" data-intro="Aqui veras y podras interactuar con el mosaico"
                     id="mosaico"></canvas>
             </div>
         </section>
     </div>
-    <div id="slider-wrapper">
+    <div id="slider-wrapper" class="relative tour" data-position='{"arx": "left","ary": "bottom-inner","ard": "90","y": "top", "x": "left-inner"}'>
         <div id="slider" class="splide">
             <div class="splide__arrows">
                 <button class="splide__arrow splide__arrow--prev">
-                    <svg width="64" height="44" viewBox="0 0 31 22" fill="white">
+                    <img src="/flecha_blanca_izquierda.png" width="40" />
+                    <!-- <svg width="64" height="44" viewBox="0 0 31 22" fill="white">
                         <path clip-rule="evenodd"
                             d="M21.3519 21.5625L30.5755 12.0562C31.1415 11.4729 31.1415 10.5271 30.5755 9.94375L21.3519 0.437513C20.7859 -0.145837 19.8682 -0.145837 19.3022 0.437513C18.7362 1.02086 18.7362 1.96666 19.3022 2.55001L26.0516 9.50624L1.44935 9.50624C0.648895 9.50624 -1.03377e-06 10.175 -9.61651e-07 11C-8.89528e-07 11.825 0.648895 12.4938 1.44935 12.4938L26.0516 12.4938L19.3022 19.45C18.7362 20.0333 18.7362 20.9791 19.3022 21.5625C19.8682 22.1458 20.7859 22.1458 21.3519 21.5625Z"
                             fill="white" />
-                    </svg>
+                    </svg> -->
                 </button>
                 <button class="splide__arrow splide__arrow--next">
-                    <svg width="64" height="44" viewBox="0 0 31 22" fill="white">
+                    <img src="/flecha_blanca_derecha.png" width="40" />
+                    <!-- <svg width="64" height="44" viewBox="0 0 31 22" fill="white">
                         <path clip-rule="evenodd"
                             d="M21.3519 21.5625L30.5755 12.0562C31.1415 11.4729 31.1415 10.5271 30.5755 9.94375L21.3519 0.437513C20.7859 -0.145837 19.8682 -0.145837 19.3022 0.437513C18.7362 1.02086 18.7362 1.96666 19.3022 2.55001L26.0516 9.50624L1.44935 9.50624C0.648895 9.50624 -1.03377e-06 10.175 -9.61651e-07 11C-8.89528e-07 11.825 0.648895 12.4938 1.44935 12.4938L26.0516 12.4938L19.3022 19.45C18.7362 20.0333 18.7362 20.9791 19.3022 21.5625C19.8682 22.1458 20.7859 22.1458 21.3519 21.5625Z"
                             fill="white" />
-                    </svg>
+                    </svg> -->
                 </button>
             </div>
             <div class="splide__track">
@@ -49,53 +54,58 @@
     </div>
     <div class="buttons" style="display:none">
         <button data-title="Agranda el mosaico" data-intro="Si quieres agrandar la pantalla, pulsa aqui" id="btnExtend"
-            class="btnNoStyles">
-            <svg id="maximize-icon" width="202" height="202" viewBox="-30 -30 250 250" fill="none"
+            class="relative btnNoStyles hover-image tour" data-position='{"arx": "right","ary": "top-inner","ard": "0","y": "top-inner", "x": "left"}'>
+            <img id="maximize-icon" width="30" data-hover-image="/pantalla_completa_amarillo.png" src="/pantalla_completa_blanco.png" />
+            <img id="minimize-icon" width="30" data-hover-image="/cerrar_amarillo.png" src="/cerrar_blanco.png" />
+            <!-- <svg id="maximize-icon" width="202" height="202" viewBox="-30 -30 250 250" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <line x1="66" y1="98.5" x2="135" y2="98.5" stroke="white" stroke-width="5" />
                 <line x1="98.5" y1="136" x2="98.5" y2="67" stroke="white" stroke-width="5" />
                 <path fill-rule="evenodd" clip-rule="evenodd"
                     d="M151 202H202V151H181V182H151V202ZM151 21H181V50H202V0H151V21ZM50 0V21H20V50H0V0H50ZM50 182V202H0V151H20V182H50Z"
                     fill="white" />
-            </svg>
-            <svg id="minimize-icon" width="35" height="35" viewBox="-18 -18 70 70" fill="none"
+            </svg> -->
+            <!-- <svg id="minimize-icon" width="30" height="35" viewBox="-18 -18 70 70" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd"
                     d="M17.3241 14.4957L2.82843 0L0 2.82843L14.4957 17.3241L3.27826e-06 31.8198L2.82843 34.6482L17.3241 20.1525L31.8198 34.6482L34.6482 31.8198L20.1525 17.3241L34.6482 2.82843L31.8198 0L17.3241 14.4957Z"
                     fill="white" />
-            </svg>
+            </svg> -->
         </button>
-        <button class="btnNoStyles" data-title="Zoom" data-intro="Pulsa aqui para acercarte al mosaico"
-            id="btnZoomIn"><svg width="181" height="207" viewBox="-25 -25 230 250" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M165.561 75C165.561 108.137 138.698 135 105.561 135C72.424 135 45.5611 108.137 45.5611 75C45.5611 41.8629 72.424 15 105.561 15C138.698 15 165.561 41.8629 165.561 75ZM180.561 75C180.561 116.421 146.982 150 105.561 150C91.5974 150 78.525 146.184 67.3299 139.538L11.5611 207L0 197.443L55.2431 130.616C40.0841 116.893 30.5611 97.0586 30.5611 75C30.5611 33.5786 64.1398 0 105.561 0C146.982 0 180.561 33.5786 180.561 75Z"
-                    fill="white" />
-                <line x1="70.5611" y1="72.5" x2="139.561" y2="72.5" stroke="white" stroke-width="5" />
-                <line x1="103.061" y1="110" x2="103.061" y2="41" stroke="white" stroke-width="5" />
-            </svg></button>
-        <button class="btnNoStyles" data-title="Zoom" data-intro="Pulsa aqui para alejarte del mosaico"
-            id="btnZoomOut"><svg width="160" height="190" viewBox="-25 -25 230 250" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M165.561 75C165.561 108.137 138.698 135 105.561 135C72.424 135 45.5611 108.137 45.5611 75C45.5611 41.8629 72.424 15 105.561 15C138.698 15 165.561 41.8629 165.561 75ZM180.561 75C180.561 116.421 146.982 150 105.561 150C91.5974 150 78.525 146.184 67.3299 139.538L11.5611 207L0 197.443L55.2431 130.616C40.0841 116.893 30.5611 97.0586 30.5611 75C30.5611 33.5786 64.1398 0 105.561 0C146.982 0 180.561 33.5786 180.561 75Z"
-                    fill="white" />
-                <line x1="70.5611" y1="72.5" x2="139.561" y2="72.5" stroke="white" stroke-width="5" />
-            </svg></button>
-        <button class="btnNoStyles" id="btnResetZoom"><svg width="175" height="175" viewBox="-20 -20 220 220"
-                fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M87.5 160C127.541 160 160 127.541 160 87.5C160 47.4594 127.541 15 87.5 15C47.4594 15 15 47.4594 15 87.5C15 127.541 47.4594 160 87.5 160ZM87.5 175C135.825 175 175 135.825 175 87.5C175 39.1751 135.825 0 87.5 0C39.1751 0 0 39.1751 0 87.5C0 135.825 39.1751 175 87.5 175Z"
-                    fill="white" />
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M118.676 53.566C119.922 55.0441 119.734 57.2521 118.256 58.4978L94.1692 78.7979C92.6911 80.0437 90.483 79.8553 89.2373 78.3772C87.9916 76.8992 88.18 74.6911 89.658 73.4454L107.118 58.7305C86.2295 57.721 69.0865 59.98 57.4724 66.6156C50.9954 70.3161 46.2564 75.3656 43.4578 82.0501C40.6388 88.7834 39.6779 97.4451 41.2603 108.504L34.3309 109.496C32.6243 97.569 33.5628 87.5588 37.0009 79.3468C40.4594 71.086 46.3352 64.9167 53.9998 60.5376C67.4243 52.8677 86.3705 50.664 108.004 51.7654L93.0236 33.9907C91.7779 32.5127 91.9663 30.3046 93.4443 29.0589C94.9224 27.8132 97.1304 28.0015 98.3762 29.4796L118.676 53.566Z"
-                    fill="white" />
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M59.2689 129.307C58.06 127.799 58.3028 125.596 59.8111 124.387L84.3907 104.687C85.8991 103.478 88.1018 103.721 89.3107 105.229C90.5196 106.738 90.2769 108.94 88.7685 110.149L71.056 124.345C89.3456 125.267 104.15 122.135 114.765 113.454C126.935 103.501 134.5 85.4966 134.5 55H141.5C141.5 86.4572 133.706 107.007 119.197 118.872C106.51 129.248 89.3846 132.398 69.8286 131.289L84.4311 149.509C85.64 151.017 85.3973 153.22 83.8889 154.429C82.3806 155.638 80.1779 155.395 78.969 153.887L59.2689 129.307Z"
-                    fill="white" />
-            </svg></button>
+        <button data-position='{"arx": "right","ary": "top-inner","ard": "0","y": "top-inner", "x": "left"}' class="tour relative btnNoStyles hover-image" data-title="Zoom" data-intro="Pulsa aqui para acercarte al mosaico"
+            id="btnZoomIn">
+            <img width="30" data-hover-image="/zoom_in_amarillo.png" src="/zoom_in_blanco.png" />
+        </button>
+        <button data-position='{"arx": "right","ary": "top-inner","ard": "0","y": "top-inner", "x": "left"}' class="tour relative btnNoStyles hover-image" data-title="Zoom" data-intro="Pulsa aqui para alejarte del mosaico"
+            id="btnZoomOut">
+            <img width="30" src="/zoom_out_blanco.png" data-hover-image="/zoom_out_amarillo.png" />
+        </button>
+        <button class="relative btnNoStyles hover-image" id="btnResetZoom"><img width="30" data-hover-image="/restablecer_amarillo.png" src="/restablecer_blanco.png" /></button>
     </div>
-    <button style="display: none" data-title="Busca" data-intro="Pulsa aqui para conseguir la imagen que buscas" id="btnSearch"></button>
+    <button data-position='{"arx": "right","ary": "top-inner","ard": "0","y": "top-inner", "x": "left"}' class="relative tour" style="display: none" data-title="Busca" data-intro="Pulsa aqui para conseguir la imagen que buscas" id="btnSearch"></button>
+    <div id="tooltip-wrapper" style="display: none">
+        <div id="tooltip">
+            <div id="arrow"></div>
+            <!-- <img id="arrow" src="/flecha_amarilla_derecha.png" /> -->
+            <button id="clear-overlay">x</button>
+            <h2 id="title"></h2>
+            <p id="description"></p>
+            <div id="buttons">
+                <button id="tooltipPrev">ANTERIOR</button>
+                <ul id="bullets">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                <button id="tooltipNext">SIGUIENTE</button>
+            </div>
+        </div>
+        <div id="modal"></div>
+        <div id="overlay"></div>
+    </div>
 </body>
 
 </html>

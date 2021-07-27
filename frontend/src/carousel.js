@@ -39,11 +39,13 @@ export function showLoader() {
 	document.getElementById('slider-wrapper').style.display = 'none'
 }
 
-export function hideLoader() {
-	document.getElementById('slider-wrapper').style.display = 'block'
-	document.getElementById('wrapper').style.display = 'block'
-	document.getElementsByClassName('buttons')[0].style.display = 'flex'
-	document.getElementById('btnSearch').style.display = 'inline-block'
-	document.getElementsByTagName('header')[0].style.display = 'flex'
+export function hideLoader(init = false) {
+	if(!init) {
+		document.getElementById('slider-wrapper').style.display = 'flex'
+		document.getElementById('wrapper').style.display = 'block'
+		document.getElementsByClassName('buttons')[0].style.display = 'flex'
+		document.getElementById('btnSearch').style.display = 'inline-block'
+		document.getElementsByTagName('header')[0].style.display = 'flex'
+	}
 	document.getElementById('loader').style.display = 'none'
 }

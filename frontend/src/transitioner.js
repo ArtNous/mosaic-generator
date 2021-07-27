@@ -24,6 +24,7 @@ import 'intro.js/introjs.css'
 import mountCarusels, { showLoader, hideLoader } from './carousel'
 import ax from './axios'
 import introJs from 'intro.js'
+import placeTooltip from './modal'
 
 // import AnimatedPlane from './plane.class'
 
@@ -71,6 +72,26 @@ function App() {
     const mouse = new Vector2();
     document.getElementById('minimize-icon').style.display = 'none'
 
+    /* for (const node of document.getElementsByClassName('hover-image')) {
+        node.addEventListener('mouseenter', function() {
+            const images = this.childNodes
+            for(const image of images) {
+                const currentImage = image.src
+                image.src = image.dataset.hoverImage
+                image.dataset.hoverImage = currentImage
+            }
+        })
+
+        node.addEventListener('mouseleave', function() {
+            const images = this.childNodes
+            for(const image of images) {
+                const currentImage = image.src
+                image.src = image.dataset.hoverImage
+                image.dataset.hoverImage = currentImage
+            }
+        })
+    } */
+
     if (document.getElementById('btnExtend')) {
         document.getElementById('btnExtend').addEventListener('click', function () {
             extended = !extended
@@ -117,7 +138,7 @@ function App() {
 
         if (document.getElementById('btnZoomIn')) {
             document.getElementById('btnZoomIn').addEventListener('click', function () {
-                if(camera.zoom < availableZoom.max) {
+                if (camera.zoom < availableZoom.max) {
                     camera.zoom += 0.1
                     camera.updateProjectionMatrix()
                     compareZoom()
@@ -154,71 +175,120 @@ function App() {
 
         window.addEventListener('resize', onResize);
         Promise.all(conf.images.map(loadTexture)).then(() => {
-            hideLoader()
-            updateSize(extended);
-            initScene()
-            initListeners()
-            carousel = mountCarusels()
-            // carousel.on('move', (newIndex, oldIndex) => targetProgress += newIndex - oldIndex)
-            carousel.on('click', (slide) => carousel.go(slide.index))
-            carousel.on('move', newIndex => targetProgress = newIndex)
-            introJs().setOptions({
-                tooltipClass: 'tooltipme',
-                nextLabel: 'SIGUIENTE',
-                prevLabel: 'ANTERIOR',
-                doneLabel: 'TERMINAR',
-                steps: [
-                    {
-                        title: 'Mosaico',
-                        intro: 'Aqui veras y podras interactuar con el mosaico. Haz scroll para navegar entre mosaicos.<img src="/wheel.jpeg" />',
-                        element: document.getElementById('mosaico')
-                    },
-                    {
-                        title: 'Galeria',
-                        intro: 'Aqui puedes navegar entre los distintos mosaicos',
-                        element: document.getElementById('slider-wrapper')
-                    },
-                    {
-                        title: 'Descubre',
-                        intro: 'Pulsa para descubrir nuevos mosaicos',
-                        element: document.getElementById('btnSearch')
-                    },
-                    {
-                        title: 'Pantalla Completa',
-                        intro: 'Pulsa para agrandar la pantalla.',
-                        element: document.getElementById('btnExtend')
-                    },
-                    {
-                        title: 'Acercar',
-                        intro: 'Pulsa para acercar',
-                        element: document.getElementById('btnZoomIn')
-                    },
-                    {
-                        title: 'Alejar',
-                        intro: 'Pulsa para alejar',
-                        element: document.getElementById('btnZoomOut')
-                    },
-                ]
-            }).start()
+            document.getElementById('logo-link').addEventListener('click', function (e) {
+                e.preventDefault()
+                document.getElementById('tooltip-wrapper').style.display = 'block'
+                document.getElementById('slider-wrapper').style.display = 'flex'
+                document.getElementById('wrapper').style.display = 'block'
+                document.getElementsByClassName('buttons')[0].style.display = 'flex'
+                document.getElementById('btnSearch').style.display = 'inline-block'
+                document.getElementsByTagName('header')[0].style.display = 'flex'
+                document.getElementById('logo').style.display = 'none'
+                updateSize(extended);
+                initScene()
+                initListeners()
+                carousel = mountCarusels()
+                // carousel.on('move', (newIndex, oldIndex) => targetProgress += newIndex - oldIndex)
+                carousel.on('click', (slide) => carousel.go(slide.index))
+                carousel.on('move', newIndex => targetProgress = newIndex)
+                document.getElementById('clear-overlay').addEventListener('click', () => {
+                    document.getElementById('tooltip-wrapper').style.display = 'none'
+                })
+                placeTooltip(1)
+                /* introJs().setOptions({
+                    tooltipClass: 'tooltipme',
+                    nextLabel: 'SIGUIENTE',
+                    prevLabel: 'ANTERIOR',
+                    doneLabel: 'TERMINAR',
+                    steps: [
+                        {
+                            title: 'Mosaico',
+                            intro: 'Aqui veras y podras interactuar con el mosaico. Haz scroll para navegar entre mosaicos.',
+                            element: document.getElementById('mosaico'),
+                            position: 'left'
+                        },
+                        {
+                            title: 'Galeria',
+                            intro: 'Aqui puedes navegar entre los distintos mosaicos',
+                            element: document.getElementById('slider-wrapper'),
+                            position: 'top'
+                        },
+                        {
+                            title: 'Descubre',
+                            intro: 'Pulsa para descubrir nuevos mosaicos',
+                            element: document.getElementById('btnSearch'),
+                            position: 'left'
+                        },
+                        {
+                            title: 'Pantalla Completa',
+                            intro: 'Pulsa para agrandar la pantalla.',
+                            element: document.getElementById('btnExtend'),
+                            position: 'left'
+                        },
+                        {
+                            title: 'Acercar',
+                            intro: 'Pulsa para acercar',
+                            element: document.getElementById('btnZoomIn'),
+                            position: 'left'
+                        },
+                        {
+                            title: 'Alejar',
+                            intro: 'Pulsa para alejar',
+                            element: document.getElementById('btnZoomOut'),
+                            position: 'left'
+                        },
+                    ]
+                }).onafterchange(target => {
+                    const tooltip = document.getElementsByClassName('introjs-tooltip')[0]
+                    let tooltipClass = null
+                    switch(target.id) {
+                        case 'mosaico':
+                            target.classList.toggle('tooltipme-arrow-canvas')
+                            tooltipClass = 'tooltip-mosaico'
+                            break;
+                        case 'slider-wrapper':
+                            tooltipClass = 'tooltip-slider'
+                            target.classList.toggle('tooltipme-arrow-gallery')
+                            break;
+                        case 'btnSearch':
+                            target.classList.toggle('tooltipme-arrow-search')
+                            break;
+                        case 'btnExtend':                            
+                            target.classList.toggle('tooltipme-arrow-extend')
+                            break;
+                        case 'btnZoomIn':
+                            target.classList.toggle('tooltipme-arrow-zoomin')
+                            break;
+                        case 'btnZoomOut':
+                            target.classList.toggle('tooltipme-arrow-zoomout')
+                            break;
+                        default:
+                            break;
+                    }
+                    tooltip.classList.add(tooltipClass)
+                })
+                .start() */
 
-            gsap.fromTo(plane1.uProgress,
-                {
-                    value: -2
-                },
-                {
-                    value: 0,
-                    duration: 2.5,
-                    ease: 'Power4.easeOut'
-                }
-            );
+                gsap.fromTo(plane1.uProgress,
+                    {
+                        value: -2
+                    },
+                    {
+                        value: 0,
+                        duration: 2.5,
+                        ease: 'Power4.easeOut'
+                    }
+                );
 
-            requestAnimationFrame(animate);
+                requestAnimationFrame(animate);
+            })
+            hideLoader(true)
         });
     }
 
     function initScene() {
         scene = new Scene();
-        scene.background = new Color(0);
+        scene.background = new Color(0x152581);
         plane1 = new AnimatedPlane({
             renderer, screen,
             size: conf.size,
@@ -308,7 +378,7 @@ function App() {
         screen.height = canvas.parentNode.clientHeight
         screen.ratio = screen.width / screen.height;
         if (renderer && camera) {
-            renderer.setSize(screen.width,screen.height);
+            renderer.setSize(screen.width, screen.height);
             camera.aspect = screen.ratio;
             camera.updateProjectionMatrix();
             const wsize = getRendererSize();
@@ -359,7 +429,7 @@ class AnimatedPlane {
             map: this.texture,
             onBeforeCompile: shader => {
                 shader.uniforms.progress = this.uProgress;
-                shader.uniforms.uvScale = { value: this.uvScale};
+                shader.uniforms.uvScale = { value: this.uvScale };
                 shader.vertexShader = `
             uniform float progress;
             uniform vec2 uvScale;
@@ -410,7 +480,7 @@ class AnimatedPlane {
 
     initPlane() {
         const { width, wWidth, wHeight } = this.screen;
-        this.wSize = this.size * wWidth / width ;
+        this.wSize = this.size * wWidth / width;
         this.nx = Math.ceil(wWidth / this.wSize) + 1;
         this.ny = Math.ceil(wHeight / this.wSize) + 1;
         this.icount = this.nx * this.ny;
@@ -568,24 +638,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // document.getElementById('wrapper').style.display = 'block'
     showLoader()
     ax
-    .get('paths')
-    .then(response => {
-        thumbsCarousel = response.data.carousels
-        mosaics = response.data.mosaics
-        totalMosaics = [...mosaics]
-        totalThumbsCarousel = [...thumbsCarousel]
+        .get('paths')
+        .then(response => {
+            thumbsCarousel = response.data.carousels
+            mosaics = response.data.mosaics
+            totalMosaics = [...mosaics]
+            totalThumbsCarousel = [...thumbsCarousel]
 
-        const { thumbsRandom, mosaicsRandom } = getRandomMosaicThumbs()
-        thumbsRandom.forEach(path => document.addSlideToPrimary(path))
-        document.getElementById('btnSearch').addEventListener('click', reloadAll)
-        conf.images = mosaicsRandom.map((path) => ({ src: path }))
-        // hideLoader()
+            const { thumbsRandom, mosaicsRandom } = getRandomMosaicThumbs()
+            thumbsRandom.forEach(path => document.addSlideToPrimary(path))
+            document.getElementById('btnSearch').addEventListener('click', reloadAll)
+            conf.images = mosaicsRandom.map((path) => ({ src: path }))
+            // hideLoader()
 
-        App()
-    }).catch(err => {
-        hideLoader()
-        alert('Error obteniendo los paths de las imagenes')
-    })
+            App()
+        }).catch(err => {
+            hideLoader()
+            alert('Error obteniendo los paths de las imagenes')
+        })
 })
 
 const verticalText = 'NUEVO MOSAICO'.split("").join("<br/>")
