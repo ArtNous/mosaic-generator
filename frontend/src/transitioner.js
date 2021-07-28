@@ -14,7 +14,8 @@ import {
     Vector2,
     Vector3,
     WebGLRenderer,
-    MOUSE
+    MOUSE,
+    Euler
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import gsap from 'gsap'
@@ -23,8 +24,7 @@ import './assets/scss/main.scss'
 import 'intro.js/introjs.css'
 import mountCarusels, { showLoader, hideLoader } from './carousel'
 import ax from './axios'
-import introJs from 'intro.js'
-import placeTooltip from './modal'
+import placeTooltip, { hideAndExtend } from './modal'
 
 // import AnimatedPlane from './plane.class'
 
@@ -59,20 +59,20 @@ function updateTexture(i) {
     }
 }
 
-function App() {
-    let renderer, scene, camera;
-    const screen = {
-        width: 0, height: 0,
-        wWidth: 0, wHeight: 0,
-        ratio: 0
-    };
+const screen = {
+    width: 0, height: 0,
+    wWidth: 0, wHeight: 0,
+    ratio: 0
+};
 
+let renderer, scene, camera;
+function App() {
     let planes
 
     const mouse = new Vector2();
-    document.getElementById('minimize-icon').style.display = 'none'
+    // document.getElementById('minimize-icon').style.display = 'none'
 
-    if (document.getElementById('btnExtend')) {
+    /* if (document.getElementById('btnExtend')) {
         document.getElementById('btnExtend').addEventListener('click', function () {
             extended = !extended
             document.getElementById('carousel').classList.toggle('extended')
@@ -83,7 +83,7 @@ function App() {
             document.getElementById('maximize-icon').style.display = extended ? 'none' : 'inline-block'
             updateSize()
         })
-    }
+    } */
 
     init();
 
@@ -98,10 +98,11 @@ function App() {
 
         const availableZoom = {
             max: 3,
-            min: 0.7
+            min: 0.5,
+            initZoom: 0.7
         }
         function compareZoom() {
-            document.getElementById('btnResetZoom').style.display = camera.zoom !== 1 ? 'inline-block' : 'none'
+            document.getElementById('btnResetZoom').style.display = camera.zoom !== availableZoom.min ? 'inline-block' : 'none'
             if (camera.zoom >= availableZoom.max) {
                 document.getElementById('btnZoomIn').classList.add('max')
             } else {
@@ -114,7 +115,7 @@ function App() {
                 document.getElementById('btnZoomOut').classList.remove('max')
             }
         }
-        camera.zoom = 0.8
+        camera.zoom = availableZoom.initZoom
         camera.updateProjectionMatrix()
         compareZoom()
 
@@ -129,7 +130,7 @@ function App() {
         }
         if (document.getElementById('btnResetZoom')) {
             document.getElementById('btnResetZoom').addEventListener('click', function () {
-                camera.zoom = 1
+                camera.zoom = availableZoom.min
                 camera.updateProjectionMatrix()
                 compareZoom()
             })
@@ -157,119 +158,46 @@ function App() {
 
         window.addEventListener('resize', onResize);
         Promise.all(conf.images.map(loadTexture)).then(() => {
-            document.getElementById('logo-link').addEventListener('click', function (e) {
-                e.preventDefault()
-                document.getElementById('tooltip-wrapper').style.display = 'block'
-                document.getElementById('slider-wrapper').style.display = 'flex'
-                document.getElementById('wrapper').style.display = 'block'
-                document.getElementsByClassName('buttons')[0].style.display = 'flex'
-                document.getElementById('btnSearch').style.display = 'inline-block'
-                document.getElementsByTagName('header')[0].style.display = 'flex'
-                document.getElementById('logo').style.display = 'none'
-                updateSize(extended);
-                initScene()
-                initListeners()
-                carousel = mountCarusels()
-                // carousel.on('move', (newIndex, oldIndex) => targetProgress += newIndex - oldIndex)
-                carousel.on('click', (slide) => carousel.go(slide.index))
-                carousel.on('move', newIndex => targetProgress = newIndex)
-                document.getElementById('clear-overlay').addEventListener('click', () => {
-                    document.getElementById('tooltip-wrapper').style.display = 'none'
-                })
-                placeTooltip(1)
-                /* introJs().setOptions({
-                    tooltipClass: 'tooltipme',
-                    nextLabel: 'SIGUIENTE',
-                    prevLabel: 'ANTERIOR',
-                    doneLabel: 'TERMINAR',
-                    steps: [
-                        {
-                            title: 'Mosaico',
-                            intro: 'Aqui veras y podras interactuar con el mosaico. Haz scroll para navegar entre mosaicos.',
-                            element: document.getElementById('mosaico'),
-                            position: 'left'
-                        },
-                        {
-                            title: 'Galeria',
-                            intro: 'Aqui puedes navegar entre los distintos mosaicos',
-                            element: document.getElementById('slider-wrapper'),
-                            position: 'top'
-                        },
-                        {
-                            title: 'Descubre',
-                            intro: 'Pulsa para descubrir nuevos mosaicos',
-                            element: document.getElementById('btnSearch'),
-                            position: 'left'
-                        },
-                        {
-                            title: 'Pantalla Completa',
-                            intro: 'Pulsa para agrandar la pantalla.',
-                            element: document.getElementById('btnExtend'),
-                            position: 'left'
-                        },
-                        {
-                            title: 'Acercar',
-                            intro: 'Pulsa para acercar',
-                            element: document.getElementById('btnZoomIn'),
-                            position: 'left'
-                        },
-                        {
-                            title: 'Alejar',
-                            intro: 'Pulsa para alejar',
-                            element: document.getElementById('btnZoomOut'),
-                            position: 'left'
-                        },
-                    ]
-                }).onafterchange(target => {
-                    const tooltip = document.getElementsByClassName('introjs-tooltip')[0]
-                    let tooltipClass = null
-                    switch(target.id) {
-                        case 'mosaico':
-                            target.classList.toggle('tooltipme-arrow-canvas')
-                            tooltipClass = 'tooltip-mosaico'
-                            break;
-                        case 'slider-wrapper':
-                            tooltipClass = 'tooltip-slider'
-                            target.classList.toggle('tooltipme-arrow-gallery')
-                            break;
-                        case 'btnSearch':
-                            target.classList.toggle('tooltipme-arrow-search')
-                            break;
-                        case 'btnExtend':                            
-                            target.classList.toggle('tooltipme-arrow-extend')
-                            break;
-                        case 'btnZoomIn':
-                            target.classList.toggle('tooltipme-arrow-zoomin')
-                            break;
-                        case 'btnZoomOut':
-                            target.classList.toggle('tooltipme-arrow-zoomout')
-                            break;
-                        default:
-                            break;
-                    }
-                    tooltip.classList.add(tooltipClass)
-                })
-                .start() */
-
-                gsap.fromTo(plane1.uProgress,
-                    {
-                        value: -2
-                    },
-                    {
-                        value: 0,
-                        duration: 2.5,
-                        ease: 'Power4.easeOut'
-                    }
-                );
-
-                requestAnimationFrame(animate);
+            document.getElementById('tooltip-wrapper').style.display = 'block'
+            document.getElementById('slider-wrapper').style.display = 'flex'
+            document.getElementById('wrapper').style.display = 'block'
+            document.getElementsByClassName('buttons')[0].style.display = 'flex'
+            document.getElementById('btnSearch').style.display = 'inline-block'
+            document.getElementById('logo').style.display = 'none'
+            updateSize();
+            initScene()
+            initListeners()
+            carousel = mountCarusels()
+            // carousel.on('move', (newIndex, oldIndex) => targetProgress += newIndex - oldIndex)
+            carousel.on('click', (slide) => carousel.go(slide.index))
+            carousel.on('move', newIndex => targetProgress = newIndex)
+            document.getElementById('clear-overlay').addEventListener('click', () => {
+                hideAndExtend()
             })
+
+            gsap.fromTo(plane1.uProgress,
+                {
+                    value: -2
+                },
+                {
+                    value: 0,
+                    duration: 2.5,
+                    ease: 'Power4.easeOut'
+                }
+            );
+
+            requestAnimationFrame(animate);
             hideLoader(true)
+            placeTooltip(1, updateSize)
+            camera.zoom = availableZoom.min
+            camera.updateProjectionMatrix()
+            compareZoom()
         });
     }
 
     function initScene() {
         scene = new Scene();
+        // scene.rotation.z = Math.PI / 2
         scene.background = new Color(0x152581);
         plane1 = new AnimatedPlane({
             renderer, screen,
@@ -353,28 +281,6 @@ function App() {
     function onResize() {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(updateSize, 200);
-    }
-
-    function updateSize() {
-        screen.width = canvas.parentNode.clientWidth
-        screen.height = canvas.parentNode.clientHeight
-        screen.ratio = screen.width / screen.height;
-        if (renderer && camera) {
-            renderer.setSize(screen.width, screen.height);
-            camera.aspect = screen.ratio;
-            camera.updateProjectionMatrix();
-            const wsize = getRendererSize();
-            screen.wWidth = wsize[0]; screen.wHeight = wsize[1];
-        }
-        if (plane1) plane1.resize();
-        if (plane2) plane2.resize();
-    }
-
-    function getRendererSize() {
-        const vFOV = (camera.fov * Math.PI) / 180;
-        const h = 2 * Math.tan(vFOV / 2) * Math.abs(camera.position.z);
-        const w = h * camera.aspect;
-        return [w, h];
     }
 }
 
@@ -537,9 +443,12 @@ class AnimatedPlane {
 
     initUV() {
         const ratio = this.nx / this.ny;
+        
         const tRatio = this.texture?.image?.width / this.texture?.image?.height;
+        
         if (ratio > tRatio) this.uvScale.set(1 / this.nx, (tRatio / ratio) / this.ny);
         else this.uvScale.set((ratio / tRatio) / this.nx, 1 / this.ny);
+
         const nW = this.uvScale.x * this.nx;
         const nH = this.uvScale.y * this.ny;
 
@@ -634,7 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // hideLoader()
 
             App()
-        }).catch(err => {
+        }).catch(() => {
             hideLoader()
             alert('Error obteniendo los paths de las imagenes')
         })
@@ -645,9 +554,32 @@ const verticalText = 'NUEVO MOSAICO'.split("").join("<br/>")
 document.getElementById('btnSearch').innerHTML = verticalText
 
 if (document.getElementById('btnGenerate')) {
-    document.getElementById('btnGenerate').addEventListener('click', e => {
+    document.getElementById('btnGenerate').addEventListener('click', () => {
         ax.post('/').then(response => {
             alert(response.data.msg)
-        }).catch(error => alert('Hubo un error al generar el mosaico'))
+        }).catch(() => alert('Hubo un error al generar el mosaico'))
     })
+}
+
+export function updateSize() {
+    screen.width = canvas.parentNode.clientWidth
+    screen.height = canvas.parentNode.clientHeight
+    screen.ratio = screen.width / screen.height;
+    if (renderer && camera) {
+        renderer.setSize(screen.width, screen.height);
+        camera.aspect = screen.ratio;
+        camera.updateProjectionMatrix();
+        const wsize = getRendererSize(camera);
+        // screen.wWidth = wsize[0]; screen.wHeight = wsize[1];
+        screen.wWidth = wsize[0]; screen.wHeight = wsize[0]/2;
+    }
+    if (plane1) plane1.resize();
+    if (plane2) plane2.resize();
+}
+
+function getRendererSize() {
+    const vFOV = (camera.fov * Math.PI) / 180;
+    const h = 2 * Math.tan(vFOV / 2) * Math.abs(camera.position.z);
+    const w = h * camera.aspect;
+    return [w, h];
 }

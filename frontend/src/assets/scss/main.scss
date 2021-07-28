@@ -24,6 +24,7 @@ body#settings {
 }
 
 header {
+    z-index: 999999;
     position: absolute;
     top: 0;
     width: 100%;
@@ -31,6 +32,7 @@ header {
 
     img {
         margin-left: 30px;
+        
     }
 
     a {
@@ -38,9 +40,10 @@ header {
         border-bottom: 1px solid white;
         padding-bottom: 5px;
         align-self: center;
-        margin-right: 1em;
+        margin-right: 4em;
         font-size: 1.1em;
         font-family: 'Membrana Estudio Semibold';
+
     }
 }
 
@@ -60,132 +63,14 @@ header {
     padding: 20px 0;
 }
 
-.tooltipme-arrow-canvas:before {
-    content: url('../Cortes\ Mosaico\ Mustakis/Elementos/flecha_amarilla_arriba.png');
-    position: absolute;
-    left: 10px;
-    bottom: -10px;
-}
-
-.tooltipme-arrow-gallery:before {
-    content: url('../Cortes\ Mosaico\ Mustakis/Elementos/flecha_amarilla_abajo.png');
-    position: absolute;
-    left: 50%;
-    top: -50px;
-    width: 35px;
-}
-
-.tooltip-mosaico {
-    left: 20% !important;
-    top: 100% !important;
-}
-
-.tooltip-slider {
-    left: 20% !important;
-}
-
-.tooltipme-arrow-search:before {
-    content: url('../Cortes\ Mosaico\ Mustakis/Elementos/flecha_amarilla_derecha.png');
-    position: absolute;
-    left: -80px;
-    top: 65%;
-    width: 35px;
-}
-
-.tooltipme-arrow-extend:before {
-    content: url('../Cortes\ Mosaico\ Mustakis/Elementos/flecha_amarilla_derecha.png');
-    position: absolute;
-    left: -80px;
-    width: 35px;
-}
-
-.tooltipme-arrow-zoomin:before {
-    content: url('../Cortes\ Mosaico\ Mustakis/Elementos/flecha_amarilla_derecha.png');
-    position: absolute;
-    left: -80px;
-    width: 35px;
-}
-
-.tooltipme-arrow-zoomout:before {
-    content: url('../Cortes\ Mosaico\ Mustakis/Elementos/flecha_amarilla_derecha.png');
-    position: absolute;
-    left: -80px;
-    width: 35px;
-}
-
-.tooltipme {
-    min-width: 350px !important;
-    font-weight: bold;
-    box-shadow: 5px 5px 10px #888 !important;
-    position: relative;
-    border-radius: 10px !important;
-
-    .introjs-tooltiptext,
-    .introjs-tooltip-header {
-        background-color: $main_color;
-        color: white;
-        font-family: 'Membrana Estudio SemiBold';
-    }
-
-    .introjs-tooltip-header {
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
-    }
-
-    .introjs-tooltip-title {
-        margin-left: 50%;
-        transform: translateX(-50%);
-        font-family: 'Membrana Estudio Bold';
-        font-weight: 700;
-    }
-
-    .introjs-skipbutton {
-        color: white;
-    }
-
-    .introjs-bullets {
-        background-color: transparent;
-        position: absolute;
-        bottom: 0.5em;
-        left: 50%;
-        transform: translateX(-50%);
-        
-    }
-
-    .introjs-tooltipbuttons {
-        background-color: $secondary_color;
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
-        
+@media screen and (max-width: 768px) {
+    header {
         a {
-            color: white;
-            text-shadow: none;
-            background-color: transparent;
-            border: none;
-            outline: none;
-            font-family: 'Membrana Estudio SemiBold';
-            font-size: 0.75em;
+            margin-right: 15px;
+            font-size: 10px;
         }
-    }
-
-    .introjs-bullets ul li a {
-        border: 1px solid white;
-        background-color: transparent;
-
-        &:hover,
-        &:focus {
-            width: 6px;
-            background-color: #fff;
-            outline: none;
+        img {
+            width: 140px;
         }
-        
-        &.active {
-            width: 6px;
-            background-color: #fff;
-        }
-    }
-
-    h1 {
-        margin: auto;
-    }
+    }   
 }

@@ -1,8 +1,10 @@
+import { updateSize } from './transitioner'
 const overlay = document.getElementById('overlay')
 const tooltip = document.getElementById('tooltip')
 const arrow = document.getElementById('arrow')
 const btnNext = document.getElementById('tooltipNext')
 const btnPrev = document.getElementById('tooltipPrev')
+
 
 const stages = [{
     title: 'Mosaico',
@@ -17,10 +19,6 @@ const stages = [{
     description: 'Pulsa para descubrir nuevos mosaicos',
     element: 'btnSearch'
 }, {
-    title: 'Extender',
-    description: 'Pulsa para agrandar la pantalla.',
-    element: 'btnExtend'
-}, {
     title: 'ZoomIn',
     description: 'Pulsa para acercar',
     element: 'btnZoomIn'
@@ -32,20 +30,29 @@ const stages = [{
 
 let i = -1
 
-export default function placeTooltip(inc) {
+export function hideAndExtend() {
+    document.getElementById('tooltip-wrapper').style.display = 'none'
+    document.getElementsByTagName('header')[0].style.display = 'flex'
+    document.getElementById('carousel').classList.toggle('extended')
+    updateSize()
+}
+
+export default function placeTooltip(inc, callback = null) {
     i += inc
     if (i === 0) {
-        btnPrev.classList.add('disabled')
-        btnPrev.disabled = true
+        btnPrev.style.visibility = 'hidden'
     } else if (i === (stages.length - 1)) {
         btnNext.textContent = 'Finalizar'
+        btnPrev.style.visibility = 'inherit'
     } else if (i === stages.length) {
-        document.getElementById('tooltip-wrapper').style.display = 'none'
+        hideAndExtend()
+        return false
     } else {
         btnNext.textContent = 'SIGUIENTE'
         btnPrev.classList.remove('disabled')
         btnNext.classList.remove('disabled')
         btnPrev.disabled = false
+        btnPrev.style.visibility = 'inherit'
     }
 
     const bullets = document.getElementById('bullets').childNodes
@@ -161,8 +168,8 @@ export default function placeTooltip(inc) {
 
     overlay.style.left = `${parametros.left}px`
     overlay.style.top = `${parametros.top}px`
-    overlay.style.width = `${parametros.width}px`
-    overlay.style.height = `${parametros.height}px`
+    overlay.style.width = `${parametros.right - parametros.left}px`
+    overlay.style.height = `${parametros.bottom - parametros.top}px`
 }
 
 btnNext.addEventListener('click', () => placeTooltip(1))

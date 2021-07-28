@@ -24,6 +24,13 @@ export default function mountCarusels() {
 		cover: true,
 		isNavigation: true,
 		padding: 0,
+		breakpoints: {
+			768: {
+				fixedWidth: '70px',
+				fixedHeight: '70px',
+				arrows: false,
+			}
+		}
 	})
 
 	slider.mount()

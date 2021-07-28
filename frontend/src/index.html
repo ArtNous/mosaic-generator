@@ -53,47 +53,32 @@
         </div>
     </div>
     <div class="buttons" style="display:none">
-        <button data-title="Agranda el mosaico" data-intro="Si quieres agrandar la pantalla, pulsa aqui" id="btnExtend"
+        <!-- <button data-title="Agranda el mosaico" data-intro="Si quieres agrandar la pantalla, pulsa aqui" id="btnExtend"
             class="relative btnNoStyles hover-image tour" data-position='{"arx": "right","ary": "top-inner","ard": "0","y": "top-inner", "x": "left"}'>
             <img id="maximize-icon" width="30" data-hover-image="/pantalla_completa_amarillo.png" src="/pantalla_completa_blanco.png" />
             <img id="minimize-icon" width="30" data-hover-image="/cerrar_amarillo.png" src="/cerrar_blanco.png" />
-            <!-- <svg id="maximize-icon" width="202" height="202" viewBox="-30 -30 250 250" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <line x1="66" y1="98.5" x2="135" y2="98.5" stroke="white" stroke-width="5" />
-                <line x1="98.5" y1="136" x2="98.5" y2="67" stroke="white" stroke-width="5" />
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M151 202H202V151H181V182H151V202ZM151 21H181V50H202V0H151V21ZM50 0V21H20V50H0V0H50ZM50 182V202H0V151H20V182H50Z"
-                    fill="white" />
-            </svg> -->
-            <!-- <svg id="minimize-icon" width="30" height="35" viewBox="-18 -18 70 70" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M17.3241 14.4957L2.82843 0L0 2.82843L14.4957 17.3241L3.27826e-06 31.8198L2.82843 34.6482L17.3241 20.1525L31.8198 34.6482L34.6482 31.8198L20.1525 17.3241L34.6482 2.82843L31.8198 0L17.3241 14.4957Z"
-                    fill="white" />
-            </svg> -->
-        </button>
+        </button> -->
         <button data-position='{"arx": "right","ary": "top-inner","ard": "0","y": "top-inner", "x": "left"}' class="tour relative btnNoStyles hover-image" data-title="Zoom" data-intro="Pulsa aqui para acercarte al mosaico"
             id="btnZoomIn">
-            <img width="30" data-hover-image="/zoom_in_amarillo.png" src="/zoom_in_blanco.png" />
+            <div></div>
         </button>
         <button data-position='{"arx": "right","ary": "top-inner","ard": "0","y": "top-inner", "x": "left"}' class="tour relative btnNoStyles hover-image" data-title="Zoom" data-intro="Pulsa aqui para alejarte del mosaico"
             id="btnZoomOut">
-            <img width="30" src="/zoom_out_blanco.png" data-hover-image="/zoom_out_amarillo.png" />
+            <div></div>
         </button>
-        <button class="relative btnNoStyles hover-image" id="btnResetZoom"><img width="30" data-hover-image="/restablecer_amarillo.png" src="/restablecer_blanco.png" /></button>
+        <button class="relative btnNoStyles hover-image" id="btnResetZoom"><div></div></button>
     </div>
     <button data-position='{"arx": "right","ary": "top-inner","ard": "0","y": "top-inner", "x": "left"}' class="relative tour" style="display: none" data-title="Busca" data-intro="Pulsa aqui para conseguir la imagen que buscas" id="btnSearch"></button>
     <div id="tooltip-wrapper" style="display: none">
         <div id="tooltip">
             <div id="arrow"></div>
-            <!-- <img id="arrow" src="/flecha_amarilla_derecha.png" /> -->
+            <!-- <img bottom="arrow" left-inner="/flecha_amarilla_derecha.png" /> -->
             <button id="clear-overlay">x</button>
             <h2 id="title"></h2>
             <p id="description"></p>
             <div id="buttons">
                 <button id="tooltipPrev">ANTERIOR</button>
                 <ul id="bullets">
-                    <li></li>
                     <li></li>
                     <li></li>
                     <li></li>

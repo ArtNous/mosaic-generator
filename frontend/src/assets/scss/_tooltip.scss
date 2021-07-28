@@ -10,6 +10,7 @@
 }
 
 #overlay{
+    box-sizing: border-box;
     display: block;
     border-radius: .3em;
     position: absolute;
@@ -109,6 +110,45 @@
                     color: #fff7;
                 }
             }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #tooltip-wrapper {
+        #tooltip {
+            width: 200px;
+
+            #title {
+                margin: 8px 0;
+                font-size: 0.9em;
+            }
+
+            #clear-overlay {
+                font-size: 1.1em;
+            }
+
+            #description {
+                padding: 3px;
+                font-size: 0.8em;
+                margin: 3px 0;
+            }
+            
+            #buttons {
+                button {
+                    font-size: 0.6em;
+                }
+
+                #bullets {
+                    display: flex;
+    
+                    li {
+                        width: 4px;
+                        height: 4px;
+                    }
+                }
+            }
+
         }
     }
 }
