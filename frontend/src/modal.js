@@ -4,40 +4,20 @@ const tooltip = document.getElementById('tooltip')
 const arrow = document.getElementById('arrow')
 const btnNext = document.getElementById('tooltipNext')
 const btnPrev = document.getElementById('tooltipPrev')
+import tour from './tour.json'
 
-
-const stages = [{
-    title: 'Mosaico',
-    description: 'Aquí veras y podrás interactuar con el mosaico. Haz scroll para navegar entre mosaicos.',
-    element: 'scene'
-}, {
-    title: 'Galeria',
-    description: 'Aquí puedes navegar entre los distintos mosaicos.',
-    element: 'slider-wrapper'
-}, {
-    title: 'Buscar',
-    description: 'Pulsa para descubrir nuevos mosaicos',
-    element: 'btnSearch'
-}, {
-    title: 'ZoomIn',
-    description: 'Pulsa para acercar',
-    element: 'btnZoomIn'
-}, {
-    title: 'ZoomOut',
-    description: 'Pulsa para alejar',
-    element: 'btnZoomOut'
-}]
+const stages = tour.stages
 
 let i = -1
 
 export function hideAndExtend() {
-    document.getElementById('tooltip-wrapper').style.display = 'none'
-    document.getElementsByTagName('header')[0].style.display = 'flex'
+    document.getElementById('tooltip-wrapper').style.visibility = 'hidden'
+    document.getElementById('header').style.visibility = 'inherit'
     document.getElementById('carousel').classList.toggle('extended')
     updateSize()
 }
 
-export default function placeTooltip(inc, callback = null) {
+export default function placeTooltip(inc) {
     i += inc
     if (i === 0) {
         btnPrev.style.visibility = 'hidden'
@@ -54,7 +34,9 @@ export default function placeTooltip(inc, callback = null) {
         btnPrev.disabled = false
         btnPrev.style.visibility = 'inherit'
     }
-
+    document.getElementById('title').textContent = stages[i].title
+    document.getElementById('description').textContent = stages[i].description
+    
     const bullets = document.getElementById('bullets').childNodes
     for (const bullet of bullets) {
         bullet.classList.remove('active')
@@ -63,14 +45,15 @@ export default function placeTooltip(inc, callback = null) {
 
     const target = document.getElementById(stages[i].element)
     const parametros = target.getBoundingClientRect()
-    const position = JSON.parse(target.dataset.position)
-    const tooltipProperties = tooltip.getBoundingClientRect()
+    const movil = window.matchMedia('(max-width: 640px)')
+    const breakpoint = movil.matches ? 'movil' : 'pc'
+    const { arrowPosition, tooltipPosition } = stages[i].breakpoints[breakpoint]
+    
     const arrowProperties = arrow.getBoundingClientRect()
-    document.getElementById('title').textContent = stages[i].title
-    document.getElementById('description').textContent = stages[i].description
+    const tooltipProperties = tooltip.getBoundingClientRect()
     let pos = ''
     let offsetX = 0, offsetY = 0
-    switch (position.arx) {
+    switch (arrowPosition.x) {
         case 'left':
             offsetX = arrowProperties.width + 10
             pos = `translateX(${-arrowProperties.width - 10}px)`
@@ -94,7 +77,7 @@ export default function placeTooltip(inc, callback = null) {
         default:
             break;
     }
-    switch (position.ary) {
+    switch (arrowPosition.y) {
         case 'top':
             offsetY = arrowProperties.height
             pos += ` translateY(${-arrowProperties.height}px)`
@@ -104,26 +87,26 @@ export default function placeTooltip(inc, callback = null) {
             pos += ` translateY(0px)`
             break;
         case 'middle':
-            pos += ` translateY(${parametros.top + parametros.height / 2 - arrowProperties.height / 2}px)`
+            pos += ` translateY(${tooltipProperties.top + tooltipProperties.height / 2 - arrowProperties.height / 2}px)`
             break;
         case 'bottom':
             offsetY = -arrowProperties.height
-            pos += ` translateY(${parametros.height}px)`
+            pos += ` translateY(${tooltipProperties.height}px)`
             break;
         case 'bottom-inner':
             offsetY = 0
-            pos += ` translateY(${parametros.height - arrowProperties.height}px)`
+            pos += ` translateY(${tooltipProperties.height - arrowProperties.height}px)`
             break;
 
         default:
             break;
     }
 
-    pos += ` rotate(${position.ard}deg)`
+    pos += ` rotate(${arrowPosition.dir}deg)`
 
     arrow.style.transform = pos
     pos = ''
-    switch (position.y) {
+    switch (tooltipPosition.y) {
         case 'top':
             pos = `translateY(${parametros.top - tooltipProperties.height + offsetY}px)`
             break;
@@ -144,7 +127,7 @@ export default function placeTooltip(inc, callback = null) {
             break;
     }
 
-    switch (position.x) {
+    switch (tooltipPosition.x) {
         case 'left':
             pos += ` translateX(${parametros.left - tooltipProperties.width + offsetX}px)`
             break;
@@ -152,7 +135,7 @@ export default function placeTooltip(inc, callback = null) {
             pos += ` translateX(${parametros.left + offsetX}px)`
             break;
         case 'center':
-            pos += ` translateX(${parametros.left + parametros.width / 2 - tooltipProperties.width / 2}px)`
+            pos += ` translateX(${parametros.left + parametros.width / 2 - tooltipProperties.width / 2 + offsetX}px)`
             break;
         case 'right':
             pos += ` translateX(${parametros.right + offsetX}px)`

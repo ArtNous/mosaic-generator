@@ -19,7 +19,6 @@ import {
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import gsap from 'gsap'
-import 'loadme/dist/style/loadme.css'
 import './assets/scss/main.scss'
 import 'intro.js/introjs.css'
 import mountCarusels, { showLoader, hideLoader } from './carousel'
@@ -158,12 +157,6 @@ function App() {
 
         window.addEventListener('resize', onResize);
         Promise.all(conf.images.map(loadTexture)).then(() => {
-            document.getElementById('tooltip-wrapper').style.display = 'block'
-            document.getElementById('slider-wrapper').style.display = 'flex'
-            document.getElementById('wrapper').style.display = 'block'
-            document.getElementsByClassName('buttons')[0].style.display = 'flex'
-            document.getElementById('btnSearch').style.display = 'inline-block'
-            document.getElementById('logo').style.display = 'none'
             updateSize();
             initScene()
             initListeners()
@@ -188,10 +181,10 @@ function App() {
 
             requestAnimationFrame(animate);
             hideLoader(true)
-            placeTooltip(1, updateSize)
             camera.zoom = availableZoom.min
             camera.updateProjectionMatrix()
             compareZoom()
+            placeTooltip(1, updateSize)
         });
     }
 
@@ -525,7 +518,7 @@ function reloadAll() {
     })
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+window.onload = () => {
     // document.getElementById('wrapper').style.display = 'block'
     showLoader()
     ax
@@ -547,19 +540,11 @@ document.addEventListener('DOMContentLoaded', () => {
             hideLoader()
             alert('Error obteniendo los paths de las imagenes')
         })
-})
+}
 
 const verticalText = 'NUEVO MOSAICO'.split("").join("<br/>")
 
 document.getElementById('btnSearch').innerHTML = verticalText
-
-if (document.getElementById('btnGenerate')) {
-    document.getElementById('btnGenerate').addEventListener('click', () => {
-        ax.post('/').then(response => {
-            alert(response.data.msg)
-        }).catch(() => alert('Hubo un error al generar el mosaico'))
-    })
-}
 
 export function updateSize() {
     screen.width = canvas.parentNode.clientWidth

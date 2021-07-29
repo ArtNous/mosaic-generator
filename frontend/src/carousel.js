@@ -39,20 +39,24 @@ export default function mountCarusels() {
 }
 
 export function showLoader() {
-	document.getElementById('loader').style.display = 'block'
-	document.getElementsByClassName('buttons')[0].style.display = 'none'
-	document.getElementById('wrapper').style.display = 'none'
-	document.getElementById('btnSearch').style.display = 'none'
-	document.getElementById('slider-wrapper').style.display = 'none'
+	document.getElementById('loader-wrapper').style.opacity = 1
+	document.getElementById('loader-wrapper').style.zIndex = 999999
+	/* document.getElementById('loader').style.display = 'block'
+	document.getElementsByClassName('buttons')[0].style.visibility = 'hidden'
+	document.getElementById('wrapper').style.visibility = 'hidden'
+	document.getElementById('btnSearch').style.visibility = 'hidden'
+	document.getElementById('slider-wrapper').style.visibility = 'hidden' */
 }
 
 export function hideLoader(init = false) {
-	if(!init) {
-		document.getElementById('slider-wrapper').style.display = 'flex'
-		document.getElementById('wrapper').style.display = 'block'
-		document.getElementsByClassName('buttons')[0].style.display = 'flex'
-		document.getElementById('btnSearch').style.display = 'inline-block'
-		document.getElementsByTagName('header')[0].style.display = 'flex'
+	document.getElementById('loader-wrapper').style.opacity = 0
+	document.getElementById('loader-wrapper').style.zIndex = -1
+	/* if(!init) {
+		document.getElementById('slider-wrapper').style.visibility = 'inherit'
+		document.getElementById('wrapper').style.visibility = 'inherit'
+		document.getElementsByClassName('buttons')[0].style.visibility = 'inherit'
+		document.getElementById('btnSearch').style.visibility = 'inherit'
+		document.getElementsByTagName('header')[0].style.visibility = 'inherit'
 	}
-	document.getElementById('loader').style.display = 'none'
+	document.getElementById('loader').style.display = 'none' */
 }
