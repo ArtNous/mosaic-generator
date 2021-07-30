@@ -7,7 +7,8 @@
 
     #btnZoomIn,
     #btnZoomOut,
-    #btnResetZoom {
+    #btnResetZoom,
+    #btnFullScreen {
         > div {
             background: url('../images/tools.png');
             width: 30px;
@@ -38,6 +39,24 @@
         &:hover {
             > div {
                 background-position: 180px 0;
+            }
+        }
+    }
+
+    #btnFullScreen {
+        > div { background-position: 210px 0; }
+        &:hover {
+            > div {
+                background-position: 240px 0;
+            }
+        }
+    }
+
+    #btnFullScreen.fullscreen {
+        > div { background-position: 270px 0; }
+        &:hover {
+            > div {
+                background-position: 300px 0;
             }
         }
     }

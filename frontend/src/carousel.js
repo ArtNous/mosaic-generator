@@ -41,22 +41,9 @@ export default function mountCarusels() {
 export function showLoader() {
 	document.getElementById('loader-wrapper').style.opacity = 1
 	document.getElementById('loader-wrapper').style.zIndex = 999999
-	/* document.getElementById('loader').style.display = 'block'
-	document.getElementsByClassName('buttons')[0].style.visibility = 'hidden'
-	document.getElementById('wrapper').style.visibility = 'hidden'
-	document.getElementById('btnSearch').style.visibility = 'hidden'
-	document.getElementById('slider-wrapper').style.visibility = 'hidden' */
 }
 
 export function hideLoader(init = false) {
 	document.getElementById('loader-wrapper').style.opacity = 0
 	document.getElementById('loader-wrapper').style.zIndex = -1
-	/* if(!init) {
-		document.getElementById('slider-wrapper').style.visibility = 'inherit'
-		document.getElementById('wrapper').style.visibility = 'inherit'
-		document.getElementsByClassName('buttons')[0].style.visibility = 'inherit'
-		document.getElementById('btnSearch').style.visibility = 'inherit'
-		document.getElementsByTagName('header')[0].style.visibility = 'inherit'
-	}
-	document.getElementById('loader').style.display = 'none' */
 }

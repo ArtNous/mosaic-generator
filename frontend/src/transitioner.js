@@ -518,8 +518,8 @@ function reloadAll() {
     })
 }
 
+let fullScreen = false
 window.onload = () => {
-    // document.getElementById('wrapper').style.display = 'block'
     showLoader()
     ax
         .get('paths')
@@ -532,6 +532,31 @@ window.onload = () => {
             const { thumbsRandom, mosaicsRandom } = getRandomMosaicThumbs()
             thumbsRandom.forEach(path => document.addSlideToPrimary(path))
             document.getElementById('btnSearch').addEventListener('click', reloadAll)
+            if (document.documentElement.requestFullscreen) {
+                document.getElementById('btnFullScreen').addEventListener('click', e => {
+                    e.currentTarget.classList.toggle('fullscreen')
+                    if (fullScreen) {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                          } else if (document.webkitExitFullscreen) { /* Safari */
+                            document.webkitExitFullscreen();
+                          } else if (document.msExitFullscreen) { /* IE11 */
+                            document.msExitFullscreen();
+                          }
+                        fullScreen = false
+                    } else {
+                        const elem = document.documentElement
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                          } else if (elem.webkitRequestFullscreen) { /* Safari */
+                            elem.webkitRequestFullscreen();
+                          } else if (elem.msRequestFullscreen) { /* IE11 */
+                            elem.msRequestFullscreen();
+                          }
+                        fullScreen = true
+                    }
+                })
+            }
             conf.images = mosaicsRandom.map((path) => ({ src: path }))
             // hideLoader()
 

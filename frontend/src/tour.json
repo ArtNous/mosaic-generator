@@ -88,7 +88,36 @@
             }
         },
         {
-            "title": "ZoomIn",
+            "title": "Pantalla Completa",
+            "description": "Pulsa para modo Pantalla Completa",
+            "element": "btnFullScreen",
+            "breakpoints": {
+                "movil": {
+                    "arrowPosition": {
+                        "x": "right",
+                        "y": "top-inner",
+                        "dir": 0
+                    },
+                    "tooltipPosition": {
+                        "y": "top-inner",
+                        "x": "left"
+                    }
+                },
+                "pc": {
+                    "arrowPosition": {
+                        "x": "right",
+                        "y": "top-inner",
+                        "dir": 0
+                    },
+                    "tooltipPosition": {
+                        "y": "top-inner",
+                        "x": "left"
+                    }
+                }
+            }
+        },
+        {
+            "title": "Acercar",
             "description": "Pulsa para acercar",
             "element": "btnZoomIn",
             "breakpoints": {
@@ -117,7 +146,7 @@
             }
         },
         {
-            "title": "ZoomOut",
+            "title": "Alejar",
             "description": "Pulsa para alejar",
             "element": "btnZoomOut",
             "breakpoints": {
@@ -145,5 +174,5 @@
                 }
             }
         }
-        ]
-    }
+    ]
+}

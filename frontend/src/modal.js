@@ -44,7 +44,7 @@ export default function placeTooltip(inc) {
     if(i < stages.length) bullets[i].classList.add('active')
 
     const target = document.getElementById(stages[i].element)
-    const parametros = target.getBoundingClientRect()
+    const params = target.getBoundingClientRect()
     const movil = window.matchMedia('(max-width: 640px)')
     const breakpoint = movil.matches ? 'movil' : 'pc'
     const { arrowPosition, tooltipPosition } = stages[i].breakpoints[breakpoint]
@@ -53,6 +53,13 @@ export default function placeTooltip(inc) {
     const tooltipProperties = tooltip.getBoundingClientRect()
     let pos = ''
     let offsetX = 0, offsetY = 0
+
+    if (params.left < 1 && stages[i].element === 'btnSearch') {
+        arrowPosition.x = 'left'
+        tooltipPosition.x = 'right'
+        arrowPosition.dir = -90
+    }
+
     switch (arrowPosition.x) {
         case 'left':
             offsetX = arrowProperties.width + 10
@@ -63,7 +70,7 @@ export default function placeTooltip(inc) {
             pos = `translateX(0px)`
             break;
         case 'center':
-            pos = `translateX(${parametros.left + parametros.width / 2 - arrowProperties.width / 2}px)`
+            pos = `translateX(${params.left + params.width / 2 - arrowProperties.width / 2}px)`
             break;
         case 'right':
             offsetX = -arrowProperties.width - 30
@@ -108,19 +115,19 @@ export default function placeTooltip(inc) {
     pos = ''
     switch (tooltipPosition.y) {
         case 'top':
-            pos = `translateY(${parametros.top - tooltipProperties.height + offsetY}px)`
+            pos = `translateY(${params.top - tooltipProperties.height + offsetY}px)`
             break;
         case 'top-inner':
-            pos = `translateY(${parametros.top + offsetY}px)`
+            pos = `translateY(${params.top + offsetY}px)`
             break;
         case 'middle':
-            pos = `translateY(${parametros.top + parametros.height / 2 - tooltipProperties.height / 2}px)`
+            pos = `translateY(${params.top + params.height / 2 - tooltipProperties.height / 2}px)`
             break;
         case 'bottom':
-            pos = `translateY(${parametros.bottom + 10 + offsetY}px)`
+            pos = `translateY(${params.bottom + 10 + offsetY}px)`
             break;
         case 'bottom-inner':
-            pos = `translateY(${parametros.bottom - tooltipProperties.height + offsetY}px)`
+            pos = `translateY(${params.bottom - tooltipProperties.height + offsetY}px)`
             break;
 
         default:
@@ -129,19 +136,19 @@ export default function placeTooltip(inc) {
 
     switch (tooltipPosition.x) {
         case 'left':
-            pos += ` translateX(${parametros.left - tooltipProperties.width + offsetX}px)`
+            pos += ` translateX(${params.left - tooltipProperties.width + offsetX}px)`
             break;
         case 'left-inner':
-            pos += ` translateX(${parametros.left + offsetX}px)`
+            pos += ` translateX(${params.left + offsetX}px)`
             break;
         case 'center':
-            pos += ` translateX(${parametros.left + parametros.width / 2 - tooltipProperties.width / 2 + offsetX}px)`
+            pos += ` translateX(${params.left + params.width / 2 - tooltipProperties.width / 2 + offsetX}px)`
             break;
         case 'right':
-            pos += ` translateX(${parametros.right + offsetX}px)`
+            pos += ` translateX(${params.right + offsetX}px)`
             break;
         case 'right-inner':
-            pos += ` translateX(${parametros.right - tooltipProperties.width + offsetX}px)`
+            pos += ` translateX(${params.right - tooltipProperties.width + offsetX}px)`
             break;
 
         default:
@@ -149,10 +156,10 @@ export default function placeTooltip(inc) {
     }
     tooltip.style.transform = pos
 
-    overlay.style.left = `${parametros.left}px`
-    overlay.style.top = `${parametros.top}px`
-    overlay.style.width = `${parametros.right - parametros.left}px`
-    overlay.style.height = `${parametros.bottom - parametros.top}px`
+    overlay.style.left = `${params.left}px`
+    overlay.style.top = `${params.top}px`
+    overlay.style.width = `${params.right - params.left}px`
+    overlay.style.height = `${params.bottom - params.top}px`
 }
 
 btnNext.addEventListener('click', () => placeTooltip(1))

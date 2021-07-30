@@ -17,7 +17,7 @@
         }
 
         .loader {
-            margin: 60px auto;
+            margin: 20px auto;
             font-size: 7px;
             position: relative;
             text-indent: -9999em;
@@ -63,16 +63,16 @@
         <img src="/logo_mustakis.png" width="230" />
         <a href="https://www.fundacionmustakis.org/" target="_blank" id="header-link">VOLVER A LA FUNDACION</a>
     </header>
-    <div id="wrapper">
-        <section id="carousel" class="carousel loading">
-            <div id="scene"
-                data-position='{"arx": "left","ary": "top-inner","ard": "-90","y": "bottom", "x": "left-inner"}'
-                class="tour">
-                <canvas class="relative" data-title="Mosaico"
-                    data-intro="Aqui veras y podras interactuar con el mosaico" id="mosaico"></canvas>
-            </div>
-        </section>
-    </div>
+    <section id="carousel" class="carousel loading">
+        <div id="scene"
+            data-position='{"arx": "left","ary": "top-inner","ard": "-90","y": "bottom", "x": "left-inner"}'
+            class="tour">
+            <canvas class="relative" data-title="Mosaico"
+                data-intro="Aqui veras y podras interactuar con el mosaico" id="mosaico"></canvas>
+        </div>
+    </section>
+    <!-- <div id="wrapper">
+    </div> -->
     <div id="slider-wrapper" class="relative tour"
         data-position='{"arx": "left","ary": "bottom-inner","ard": "90","y": "top", "x": "left-inner"}'>
         <div id="slider" class="splide">
@@ -90,6 +90,9 @@
         </div>
     </div>
     <div class="buttons">
+        <button class="relative btnNoStyles hover-image" id="btnFullScreen">
+            <div></div>
+        </button>
         <button data-position='{"arx": "right","ary": "top-inner","ard": "0","y": "top-inner", "x": "left"}'
             class="tour relative btnNoStyles hover-image" data-title="Zoom"
             data-intro="Pulsa aqui para acercarte al mosaico" id="btnZoomIn">
@@ -121,6 +124,7 @@
                     <li></li>
                     <li></li>
                     <li></li>
+                    <li></li>
                 </ul>
                 <button id="tooltipNext">SIGUIENTE</button>
             </div>
@@ -129,10 +133,12 @@
         <div id="overlay"></div>
     </div>
     <div id="loader-wrapper"
-        style="display: flex;position: absolute;top: 0;left: 0;width: 100vw;height: 100vh;z-index: 99999;background-color: #152581;flex-direction: column;justify-content: center;align-items: center;opacity: 1;transition: all 0.6s ease;">
-        <div id="loader" class="loader"></div>
-        <div id="logo" class="text-center"><a href="#" id="logo-link" rel="noopener noreferrer"><img
-                    src="/logo_mustakis.png" /></a></div>
+        style="display: flex;position: absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: 99999;background-color: #152581;flex-direction: column;justify-content: center;align-items: center;opacity: 1;transition: all 0.6s ease;">
+        <div style="display: flex; justify-content: center; flex-direction: column;">
+            <div id="loader" class="loader"></div>
+            <div style="flex:1" id="logo" class="text-center"><a href="#" id="logo-link" rel="noopener noreferrer"><img
+                        src="/logo_mustakis.png" /></a></div>
+        </div>
     </div>
 </body>
 

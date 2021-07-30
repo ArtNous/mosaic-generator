@@ -4,11 +4,16 @@
 @import 'loader';
 @import 'tooltip';
 
+html {
+    height: 100vh;
+    height: -webkit-fill-available;
+}
+
 body{
     margin: 0;
     padding: 0;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -16,7 +21,6 @@ body{
     background-color: $secondary_color;
     position: relative;
     font-family: 'Membrana Estudio Regular';
-    /* align-items: center; */
 }
 
 body#settings {
