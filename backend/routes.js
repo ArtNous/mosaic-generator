@@ -4,13 +4,12 @@ const fs = require('fs')
 require('dotenv').config()
 
 module.exports = app => {
-    app.post('/', (req, res) => {
-        const email = req.query.email
+    app.get('/', (req, res) => {
         try {
-            fs.accessSync('./tmp')
+            fs.accessSync('./tmp.txt')
             res.json({ msg: 'Hay un proceso corriendo actualmente. Por favor espere que termine.' })
         } catch (error) {
-            fs.writeFileSync('./tmp', 'Generando')
+            fs.writeFileSync('./tmp.txt', 'Generando')
             generateThumbnails('./images')
             res.json({ msg: 'Tarea en proceso' })            
         }
@@ -48,11 +47,5 @@ module.exports = app => {
             console.log(error);
             res.status(500).json({ msg: `No se encuentra el directorio ${carouselThumbsDir}` })
         }
-    })
-
-    app.get('/test', (req, res) => {
-        res.json({
-            msg: 'Funcionando perfecto'
-        })
     })
 }

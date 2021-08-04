@@ -11,7 +11,7 @@ const stages = tour.stages
 let i = -1
 
 export function hideAndExtend() {
-    document.getElementById('tooltip-wrapper').style.visibility = 'hidden'
+    document.getElementById('tooltip-wrapper').style.display = 'none'
     document.getElementById('header').style.visibility = 'inherit'
     document.getElementById('carousel').classList.toggle('extended')
     updateSize()
@@ -22,7 +22,7 @@ export default function placeTooltip(inc) {
     if (i === 0) {
         btnPrev.style.visibility = 'hidden'
     } else if (i === (stages.length - 1)) {
-        btnNext.textContent = 'Finalizar'
+        btnNext.textContent = 'FINALIZAR'
         btnPrev.style.visibility = 'inherit'
     } else if (i === stages.length) {
         hideAndExtend()
@@ -57,7 +57,7 @@ export default function placeTooltip(inc) {
     if (params.left < 1 && stages[i].element === 'btnSearch') {
         arrowPosition.x = 'left'
         tooltipPosition.x = 'right'
-        arrowPosition.dir = -90
+        arrowPosition.dir = -180
     }
 
     switch (arrowPosition.x) {
