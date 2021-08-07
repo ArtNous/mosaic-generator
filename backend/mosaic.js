@@ -12,7 +12,15 @@ const {
 const sharp = require('sharp')
 const { Vector3 } = require('three')
 const db = require('./models')
+const { constants } = require('buffer')
 
+/**
+ * Crea un mosaico con cada una de
+ * las imagenes y la serie de thumbs
+ * anteriormente
+ * @param {String} imagePath 
+ * @param {Array<String>} thumbnails 
+ */
 async function createMosaic(imagePath, thumbnails) {
     let buffer
     let mosaic = await sharp({
@@ -64,29 +72,58 @@ async function createMosaic(imagePath, thumbnails) {
     }
 }
 
-async function createThumbnail(path, thumbSize, thumbsDir, process = true, save = false, verbose = false) {
+/**
+ * Crea un thumbnail cuadrado con las medidas
+ * especificadas.
+ * @param {String} path Ruta de la imagen para procesar
+ * @param {Number} thumbSize Tamaño del thumb
+ * @param {String} dir Donde se guardara el thumb
+ * @param {Booleab} process Si se van a analizar los colores
+ * @param {Boolean} save Guardar en el sistema de archivos
+ * @param {Boolean} verbose Mostrar informacion en la consola
+ * @returns Object
+ */
+async function createThumbnail(path, thumbSize, dir, process = true, save = false, verbose = false) {
     try {
         const thumbnail = await sharp(`${imagesDir}/${path}`).resize(thumbSize, thumbSize).toBuffer()
         
-        if (save) await sharp(thumbnail).toFile(`${thumbsDir}/${path}`)
+        if (save) {
+            try {
+                fs.accessSync(dir, fs.constants.R_OK | fs.constants.W_OK);                
+            } catch (error) {
+                console.log(error)
+                fs.mkdirSync(dir)
+            }
+            await sharp(thumbnail).toFile(`${dir}/${path}`)
+        }
 
         if(verbose) console.log('Thumbnail generado')
         if (process) {
-            const { dominant } = await sharp(thumbnail).stats()    
+            const { dominant } = await sharp(thumbnail).stats()
             const rgb = new Vector3(dominant.r, dominant.g, dominant.b)
             return { thumbnail, rgb }
         }
         
     } catch (error) {
-        throw new Error('Error redimensionando la imagen')
+        console.log(error)
     }
 }
 
+/**
+ * Prepara todo para el comienzo
+ * de creación de mosaicos
+ * @param {Array} thumbnails Lista de rutas a los mosaicos generados
+ */
 function generateMosaics(thumbnails) {
-    fs.access(imagesDir, fs.constants.F_OK, async function (err) {
+    fs.access(imagesDir, fs.constants.F_OK, function (err) {
         if (err) {
             console.log(err)
             return
+        }
+        try {
+            fs.accessSync(mosaicsDir, fs.constants.R_OK || fs.constants.W_OK)            
+        } catch (error) {
+            fs.mkdirSync(mosaicsDir)
         }
         const files = fs.readdirSync(imagesDir)
 
@@ -94,7 +131,7 @@ function generateMosaics(thumbnails) {
         let mosaicPromises = []
         for (const imagePath of files) {
             try {
-                fs.accessSync(`${thumbnails}/${imagePath}`, fs.constants.F_OK)
+                fs.accessSync(`${thumbsDir}/${imagePath}`, fs.constants.F_OK)
             } catch (error) {
                 mosaicPromises.push(createMosaic(imagePath, thumbnails))
             }
@@ -105,6 +142,12 @@ function generateMosaics(thumbnails) {
     })
 }
 
+/**
+ * Metodo que crea los thumbs para
+ * formar los mosaicos y los thumbs
+ * que forman parte del carousel
+ * @param {String} dir Ruta a la carpeta donde estan las imagenes principales
+ */
 module.exports = function generateThumbnails(dir) {
     let thumbs = []
     let carouselThumbs = []
@@ -116,8 +159,8 @@ module.exports = function generateThumbnails(dir) {
         const files = fs.readdirSync(dir)
         files.forEach(path => {
             try {
-                thumbs.push(createThumbnail(path, CELL, './thumbs_mosaicos'))
-                carouselThumbs.push(createThumbnail(path, CAROUSEL_THUMBSIZE, './thumbs_carousel', false, true))
+                thumbs.push(createThumbnail(path, CELL, thumbsDir))
+                carouselThumbs.push(createThumbnail(path, CAROUSEL_THUMBSIZE, './public/thumbs_carousel', false, true))
             } catch (error) {
                 console.log(error)
             }

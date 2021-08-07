@@ -15,6 +15,6 @@ module.exports = {
     IMAGE_SIZE: 1000,
     imagesDir: './images',
     thumbsDir: './thumbnails',
-    mosaicsDir: './mosaics',
+    mosaicsDir: './public/mosaics',
     emitter
 }
