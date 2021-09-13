@@ -4,4 +4,4 @@ Las instrucciones para ejecutar el backend y poder generar los mosaicos estan en
 
 # Instalación del Frontend
 
-Las instrucciones para ejecutar el frontend y poder visualizar los mosaicos estan en el siguiente link [Frontend](/backend/README.md)
+Las instrucciones para ejecutar el frontend y poder visualizar los mosaicos estan en el siguiente link [Frontend](/frontend/README.md)
