@@ -4,7 +4,7 @@ const fs = require('fs')
 require('dotenv').config()
 
 module.exports = app => {
-    app.post('/', (req, res) => {
+    app.post('/process', (req, res) => {
         try {
             fs.accessSync('./tmp.txt')
             res.json({ msg: 'Hay un proceso corriendo actualmente. Por favor espere que termine.' })
