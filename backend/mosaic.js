@@ -31,7 +31,7 @@ async function createMosaic(imagePath, thumbnails) {
         }
     })
     try {
-        console.log(`Creando mosaico ${imagesPath}`)
+        console.log(`Creando mosaico ${imagePath}`)
         const image = await sharp(`${imagesDir}/${imagePath}`).resize(IMAGE_SIZE, IMAGE_SIZE).toBuffer()
         let matriz = []
         for (let top = 0; top < IMAGE_SIZE; top += CELL_EXTRACT) {
