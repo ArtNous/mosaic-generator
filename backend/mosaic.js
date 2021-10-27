@@ -95,6 +95,7 @@ async function createThumbnail(path, thumbSize, dir, process = true, save = fals
                 fs.mkdirSync(dir)
             }
             await sharp(thumbnail).toFile(`${dir}/${path}`)
+            console.log(`Thumb generado ${path}`)
         }
 
         if(verbose) console.log('Thumbnail generado')
