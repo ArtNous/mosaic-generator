@@ -12,7 +12,6 @@ const {
 const sharp = require('sharp')
 const { Vector3 } = require('three')
 const db = require('./models')
-const { constants } = require('buffer')
 
 /**
  * Crea un mosaico con cada una de
@@ -32,6 +31,7 @@ async function createMosaic(imagePath, thumbnails) {
         }
     })
     try {
+        console.log(`Creando mosaico ${imagesPath}`)
         const image = await sharp(`${imagesDir}/${imagePath}`).resize(IMAGE_SIZE, IMAGE_SIZE).toBuffer()
         let matriz = []
         for (let top = 0; top < IMAGE_SIZE; top += CELL_EXTRACT) {
@@ -64,7 +64,7 @@ async function createMosaic(imagePath, thumbnails) {
         }
         console.log('Matriz de imagen guardada', imagePath)
         mosaic.toFile(`${mosaicsDir}/${imagePath}`).then(() => {
-            db.Mosaic.create({ path: imagePath, matrix: JSON.stringify(matriz) })
+            // db.Mosaic.create({ path: imagePath, matrix: JSON.stringify(matriz) })
         })
     } catch (error) {
         console.log(error)
@@ -128,6 +128,7 @@ function generateMosaics(thumbnails) {
         const files = fs.readdirSync(imagesDir)
 
         db.Mosaic.truncate()
+        console.log('Base de datos truncada...')
         let mosaicPromises = []
         for (const imagePath of files) {
             try {
@@ -157,6 +158,7 @@ module.exports = function generateThumbnails(dir) {
             return
         }
         const files = fs.readdirSync(dir)
+        console.log('Empezando proceso...')
         files.forEach(path => {
             try {
                 thumbs.push(createThumbnail(path, CELL, thumbsDir))
