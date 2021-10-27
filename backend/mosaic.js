@@ -11,7 +11,6 @@ const {
 } = require('./config/mosaic')
 const sharp = require('sharp')
 const { Vector3 } = require('three')
-const db = require('./models')
 
 /**
  * Crea un mosaico con cada una de
@@ -63,9 +62,10 @@ async function createMosaic(imagePath, thumbnails) {
             matriz[top / CELL_EXTRACT] = row
         }
         console.log('Matriz de imagen guardada', imagePath)
-        mosaic.toFile(`${mosaicsDir}/${imagePath}`).then(() => {
-            // db.Mosaic.create({ path: imagePath, matrix: JSON.stringify(matriz) })
-        })
+        mosaic.toFile(`${mosaicsDir}/${imagePath}`)
+        /* mosaic.toFile(`${mosaicsDir}/${imagePath}`).then(() => {
+            db.Mosaic.create({ path: imagePath, matrix: JSON.stringify(matriz) })
+        }) */
     } catch (error) {
         console.log(error)
         process.exit(1)
@@ -128,8 +128,6 @@ function generateMosaics(thumbnails) {
         }
         const files = fs.readdirSync(imagesDir)
 
-        db.Mosaic.truncate()
-        console.log('Base de datos truncada...')
         let mosaicPromises = []
         for (const imagePath of files) {
             try {
