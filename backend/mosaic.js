@@ -45,7 +45,7 @@ async function createMosaic(imagePath, thumbnails) {
                     width: CELL_EXTRACT,
                     height: CELL_EXTRACT
                 }).toBuffer()
-                const { dominant } = await sharp(extracted).stats()
+                const { dominant } = await sharp(extracted).toColourspace('lab').stats()
                 const colorExtracted = new Vector3(dominant.r, dominant.g, dominant.b)
                 thumbnails.forEach((thumb) => {
                     distances.push(colorExtracted.distanceTo(thumb.rgb))
@@ -99,7 +99,7 @@ async function createThumbnail(path, thumbSize, dir, process = true, save = fals
 
         if(verbose) console.log('Thumbnail generado')
         if (process) {
-            const { dominant } = await sharp(thumbnail).stats()
+            const { dominant } = await sharp(thumbnail).toColourspace('lab').stats()
             const rgb = new Vector3(dominant.r, dominant.g, dominant.b)
             return { thumbnail, rgb }
         }
