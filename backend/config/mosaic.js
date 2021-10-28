@@ -10,9 +10,9 @@ emitter.addListener('mosaic-generated', () => {
 
 module.exports = {
     CAROUSEL_THUMBSIZE: 96,
-    CELL_EXTRACT: 10,
+    CELL_EXTRACT: 1,
     CELL: 30,
-    IMAGE_SIZE: 1000,
+    IMAGE_SIZE: 100,
     imagesDir: './images',
     thumbsDir: './thumbnails',
     mosaicsDir: './public/mosaics',

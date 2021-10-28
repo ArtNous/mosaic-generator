@@ -31,7 +31,7 @@ async function createMosaic(imagePath, thumbnails) {
     })
     try {
         console.log(`Creando mosaico ${imagePath}`)
-        const image = await sharp(`${imagesDir}/${imagePath}`).resize(IMAGE_SIZE, IMAGE_SIZE).toBuffer()
+        const image = await sharp(`${imagesDir}/${imagePath}`).resize(IMAGE_SIZE, IMAGE_SIZE).toColourspace('lab').toBuffer()
         let matriz = []
         for (let top = 0; top < IMAGE_SIZE; top += CELL_EXTRACT) {
             let row = []
@@ -43,20 +43,21 @@ async function createMosaic(imagePath, thumbnails) {
                     left,
                     width: CELL_EXTRACT,
                     height: CELL_EXTRACT
-                }).toBuffer()
-                const { dominant } = await sharp(extracted).toColourspace('lab').stats()
-                const colorExtracted = new Vector3(dominant.r, dominant.g, dominant.b)
-                thumbnails.forEach((thumb) => {
-                    distances.push(colorExtracted.distanceTo(thumb.rgb))
+                }).raw().toBuffer()
+                .then(data => {
+                    const colorExtracted = new Vector3(...data)
+                    thumbnails.forEach((thumb) => {
+                        distances.push(colorExtracted.distanceTo(thumb.rgb))
+                    })
+                    const nearestColorIndex = distances.findIndex((distance, i, distances) => distance === Math.min(...distances))
+                    const nearestThumb = thumbnails[nearestColorIndex]
+                    buffer = await mosaic
+                        .composite([{ input: nearestThumb.thumbnail, top, left }])
+                        .jpeg()
+                        .toBuffer()
+                    mosaic = sharp(buffer)
+                    row[left / CELL_EXTRACT] = nearestColorIndex
                 })
-                const nearestColorIndex = distances.findIndex((distance, i, distances) => distance === Math.min(...distances))
-                const nearestThumb = thumbnails[nearestColorIndex]
-                buffer = await mosaic
-                    .composite([{ input: nearestThumb.thumbnail, top, left }])
-                    .jpeg()
-                    .toBuffer()
-                mosaic = sharp(buffer)
-                row[left / CELL_EXTRACT] = nearestColorIndex
             }
             console.timeEnd(`fila${top / CELL_EXTRACT}_${imagePath}`)
             matriz[top / CELL_EXTRACT] = row
