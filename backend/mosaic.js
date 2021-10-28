@@ -44,7 +44,7 @@ async function createMosaic(imagePath, thumbnails) {
                     width: CELL_EXTRACT,
                     height: CELL_EXTRACT
                 }).raw().toBuffer()
-                .then(data => {
+                .then(async data => {
                     const colorExtracted = new Vector3(...data)
                     thumbnails.forEach((thumb) => {
                         distances.push(colorExtracted.distanceTo(thumb.rgb))
