@@ -31,14 +31,15 @@ async function createMosaic(imagePath, thumbnails) {
     })
     try {
         console.log(`Creando mosaico ${imagePath}`)
-        const image = await sharp(`${imagesDir}/${imagePath}`).resize(IMAGE_SIZE, IMAGE_SIZE).toColourspace('lab').toBuffer()
-        let matriz = []
-        for (let top = 0; top < IMAGE_SIZE; top += CELL_EXTRACT) {
-            let row = []
-            console.time(`fila${top / CELL_EXTRACT}_${imagePath}`)
-            for (let left = 0; left < IMAGE_SIZE; left += CELL_EXTRACT) {
+        const image = await sharp(`${imagesDir}/${imagePath}`)
+            .resize(IMAGE_SIZE / CELL, IMAGE_SIZE / CELL)
+            .toColourspace('lab')
+            .toBuffer()
+        for (let top = 0; top < IMAGE_SIZE / CELL; top += CELL_EXTRACT) {
+            console.time(`fila${top}_${imagePath}`)
+            for (let left = 0; left < IMAGE_SIZE / CELL; left += CELL_EXTRACT) {
                 let distances = []
-                const extracted = await sharp(image).extract({
+                await sharp(image).extract({
                     top,
                     left,
                     width: CELL_EXTRACT,
@@ -56,11 +57,9 @@ async function createMosaic(imagePath, thumbnails) {
                         .jpeg()
                         .toBuffer()
                     mosaic = sharp(buffer)
-                    row[left / CELL_EXTRACT] = nearestColorIndex
                 })
             }
             console.timeEnd(`fila${top / CELL_EXTRACT}_${imagePath}`)
-            matriz[top / CELL_EXTRACT] = row
         }
         console.log('Matriz de imagen guardada', imagePath)
         mosaic.toFile(`${mosaicsDir}/${imagePath}`)
@@ -117,7 +116,7 @@ async function createThumbnail(path, thumbSize, dir, process = true, save = fals
  * @param {Array} thumbnails Lista de rutas a los mosaicos generados
  */
 function generateMosaics(thumbnails) {
-    fs.access(imagesDir, fs.constants.F_OK, function (err) {
+    fs.access(imagesDir, fs.constants.F_OK, async function (err) {
         if (err) {
             console.log(err)
             return
@@ -129,17 +128,16 @@ function generateMosaics(thumbnails) {
         }
         const files = fs.readdirSync(imagesDir)
 
-        let mosaicPromises = []
         for (const imagePath of files) {
             try {
                 fs.accessSync(`${thumbsDir}/${imagePath}`, fs.constants.F_OK)
             } catch (error) {
-                mosaicPromises.push(createMosaic(imagePath, thumbnails))
+                await createMosaic(imagePath, thumbnails)
+                console.log(`Mosaico ${imagePath} generado`)
+                // mosaicPromises.push()
             }
         }
-        Promise.all(mosaicPromises).then(() => {
-            emitter.emit('mosaic-generated')
-        })
+        emitter.emit('mosaics-generated')
     })
 }
 
