@@ -116,7 +116,7 @@ async function createThumbnail(path, thumbSize, dir, process = true, save = fals
  * @param {Array} thumbnails Lista de rutas a los mosaicos generados
  */
 function generateMosaics(thumbnails) {
-    fs.access(imagesDir, fs.constants.F_OK, async function (err) {
+    fs.access(imagesDir, fs.constants.F_OK, function (err) {
         if (err) {
             console.log(err)
             return
@@ -128,16 +128,17 @@ function generateMosaics(thumbnails) {
         }
         const files = fs.readdirSync(imagesDir)
 
+        let mosaicPromises = []
         for (const imagePath of files) {
             try {
                 fs.accessSync(`${thumbsDir}/${imagePath}`, fs.constants.F_OK)
             } catch (error) {
-                await createMosaic(imagePath, thumbnails)
-                console.log(`Mosaico ${imagePath} generado`)
-                // mosaicPromises.push()
+                mosaicPromises.push(createMosaic(imagePath, thumbnails))
             }
         }
-        emitter.emit('mosaics-generated')
+        Promise.all(mosaicPromises).then(() => {
+            emitter.emit('mosaic-generated')
+        })
     })
 }
 
