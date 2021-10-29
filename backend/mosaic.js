@@ -53,7 +53,9 @@ async function createMosaic(imagePath, thumbnails) {
                     const nearestColorIndex = distances.findIndex((distance, i, distances) => distance === Math.min(...distances))
                     const nearestThumb = thumbnails[nearestColorIndex]
                     buffer = await mosaic
-                        .composite([{ input: nearestThumb.thumbnail, top, left }])
+                    let x= left * CELL
+                    let y= top * CELL
+                        .composite([{ input: nearestThumb.thumbnail, y, x }])
                         .jpeg()
                         .toBuffer()
                     mosaic = sharp(buffer)
