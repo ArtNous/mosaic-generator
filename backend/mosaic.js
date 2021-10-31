@@ -11,8 +11,6 @@ const {
 } = require('./config/mosaic')
 const sharp = require('sharp')
 const { Vector3 } = require('three')
-const db = require('./models')
-const { constants } = require('buffer')
 
 /**
  * Crea un mosaico con cada una de
@@ -32,40 +30,42 @@ async function createMosaic(imagePath, thumbnails) {
         }
     })
     try {
-        const image = await sharp(`${imagesDir}/${imagePath}`).resize(IMAGE_SIZE, IMAGE_SIZE).toBuffer()
-        let matriz = []
-        for (let top = 0; top < IMAGE_SIZE; top += CELL_EXTRACT) {
-            let row = []
-            console.time(`fila${top / CELL_EXTRACT}_${imagePath}`)
-            for (let left = 0; left < IMAGE_SIZE; left += CELL_EXTRACT) {
+        console.log(`Creando mosaico ${imagePath}`)
+        const image = await sharp(`${imagesDir}/${imagePath}`)
+            .resize(IMAGE_SIZE / CELL, IMAGE_SIZE / CELL)
+            .toColourspace('lab')
+            .toBuffer()
+        for (let top = 0; top < IMAGE_SIZE / CELL; top += CELL_EXTRACT) {
+            console.time(`fila${top}_${imagePath}`)
+            for (let left = 0; left < IMAGE_SIZE / CELL; left += CELL_EXTRACT) {
                 let distances = []
-                const extracted = await sharp(image).extract({
+                await sharp(image).extract({
                     top,
                     left,
                     width: CELL_EXTRACT,
                     height: CELL_EXTRACT
-                }).toBuffer()
-                const { dominant } = await sharp(extracted).toColourspace('lab').stats()
-                const colorExtracted = new Vector3(dominant.r, dominant.g, dominant.b)
-                thumbnails.forEach((thumb) => {
-                    distances.push(colorExtracted.distanceTo(thumb.rgb))
+                }).raw().toBuffer()
+                .then(async data => {
+                    const colorExtracted = new Vector3(...data)
+                    thumbnails.forEach((thumb) => {
+                        distances.push(colorExtracted.distanceTo(thumb.rgb))
+                    })
+                    const nearestColorIndex = distances.findIndex((distance, i, distances) => distance === Math.min(...distances))
+                    const nearestThumb = thumbnails[nearestColorIndex]
+                    buffer = await mosaic
+                        .composite([{ input: nearestThumb.thumbnail, top:top*CELL, left:left*CELL }])
+                        .jpeg()
+                        .toBuffer()
+                    mosaic = sharp(buffer)
                 })
-                const nearestColorIndex = distances.findIndex((distance, i, distances) => distance === Math.min(...distances))
-                const nearestThumb = thumbnails[nearestColorIndex]
-                buffer = await mosaic
-                    .composite([{ input: nearestThumb.thumbnail, top, left }])
-                    .jpeg()
-                    .toBuffer()
-                mosaic = sharp(buffer)
-                row[left / CELL_EXTRACT] = nearestColorIndex
             }
             console.timeEnd(`fila${top / CELL_EXTRACT}_${imagePath}`)
-            matriz[top / CELL_EXTRACT] = row
         }
         console.log('Matriz de imagen guardada', imagePath)
-        mosaic.toFile(`${mosaicsDir}/${imagePath}`).then(() => {
+        mosaic.toFile(`${mosaicsDir}/${imagePath}`)
+        /* mosaic.toFile(`${mosaicsDir}/${imagePath}`).then(() => {
             db.Mosaic.create({ path: imagePath, matrix: JSON.stringify(matriz) })
-        })
+        }) */
     } catch (error) {
         console.log(error)
         process.exit(1)
@@ -95,6 +95,7 @@ async function createThumbnail(path, thumbSize, dir, process = true, save = fals
                 fs.mkdirSync(dir)
             }
             await sharp(thumbnail).toFile(`${dir}/${path}`)
+            console.log(`Thumb generado ${path}`)
         }
 
         if(verbose) console.log('Thumbnail generado')
@@ -127,7 +128,6 @@ function generateMosaics(thumbnails) {
         }
         const files = fs.readdirSync(imagesDir)
 
-        db.Mosaic.truncate()
         let mosaicPromises = []
         for (const imagePath of files) {
             try {
@@ -157,6 +157,7 @@ module.exports = function generateThumbnails(dir) {
             return
         }
         const files = fs.readdirSync(dir)
+        console.log('Empezando proceso...')
         files.forEach(path => {
             try {
                 thumbs.push(createThumbnail(path, CELL, thumbsDir))

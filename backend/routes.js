@@ -1,10 +1,9 @@
 const generateThumbnails = require('./mosaic')
-const db = require('./models')
 const fs = require('fs')
 require('dotenv').config()
 
 module.exports = app => {
-    app.get('/', (req, res) => {
+    app.post('/process', (req, res) => {
         try {
             fs.accessSync('./tmp.txt')
             res.json({ msg: 'Hay un proceso corriendo actualmente. Por favor espere que termine.' })
@@ -12,17 +11,6 @@ module.exports = app => {
             fs.writeFileSync('./tmp.txt', 'Generando')
             generateThumbnails('./images')
             res.json({ msg: 'Tarea en proceso' })            
-        }
-    })
-
-    app.post('/grids', async (req, res) => {
-        try {
-            const matrixs = await db.Mosaic.findAll({
-                attributes: ['path', 'matrix']
-            })
-            res.json({ thumbs: matrixs.map(matrix => ({ path: `${process.env.SERVER}/${matrix.path}`, matrix: JSON.parse(matrix.matrix) })) })
-        } catch (error) {
-            console.log(error)
         }
     })
 
