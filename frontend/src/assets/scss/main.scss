@@ -6,20 +6,18 @@
 
 html {
     height: 100vh;
-    height: -webkit-fill-available;
 }
 
 body{
     margin: 0;
     padding: 0;
     width: 100vw;
-    height: 100%;
+    height: 100vh;
     display: flex;
     justify-content: center;
     flex-direction: column;
     overflow: hidden;
     background-color: $secondary_color;
-    position: relative;
     font-family: 'Membrana Estudio Regular';
 }
 
