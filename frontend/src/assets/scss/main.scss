@@ -34,6 +34,7 @@ header {
     justify-content: space-between;
     display: flex;
     z-index: 1;
+    padding: 20px 0;
 
     img {
         margin-left: 30px;
@@ -62,10 +63,6 @@ header {
 
 .flex {
     display: flex;
-}
-
-header {
-    padding: 20px 0;
 }
 
 @media screen and (max-width: 768px) {

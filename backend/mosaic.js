@@ -161,7 +161,7 @@ module.exports = function generateThumbnails(dir) {
         files.forEach(path => {
             try {
                 thumbs.push(createThumbnail(path, CELL, thumbsDir))
-                carouselThumbs.push(createThumbnail(path, CAROUSEL_THUMBSIZE, './public/thumbs_carousel', false, true))
+                carouselThumbs.push(createThumbnail(path, CAROUSEL_THUMBSIZE, './public/s', false, true))
             } catch (error) {
                 console.log(error)
             }

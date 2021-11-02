@@ -25,8 +25,6 @@ import mountCarusels, { showLoader, hideLoader } from './carousel'
 import ax from './axios'
 import placeTooltip, { hideAndExtend } from './modal'
 
-// import AnimatedPlane from './plane.class'
-
 let progress = 0, targetProgress = 0, canvas;
 let thumbsCarousel, mosaics, carousel, plane1, plane2, totalMosaics, totalThumbsCarousel
 
@@ -37,7 +35,6 @@ const conf = {
 let total
 const loader = new TextureLoader();
 const textures = [];
-let extended = false
 
 const PATHS_PER_PAGE = 10
 
