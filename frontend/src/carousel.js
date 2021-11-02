@@ -28,11 +28,11 @@ export default function mountCarusels() {
 }
 
 export function showLoader() {
-	document.getElementById('loader-wrapper').style.opacity = 1
-	document.getElementById('loader-wrapper').style.zIndex = 999999
+	document.getElementById('loader-wrapper').style.zIndex = 100
+	document.getElementById('loader-wrapper').style.display = 'flex'
 }
 
 export function hideLoader(init = false) {
-	document.getElementById('loader-wrapper').style.opacity = 0
+	document.getElementById('loader-wrapper').style.display = 'none'
 	document.getElementById('loader-wrapper').style.zIndex = -1
 }
